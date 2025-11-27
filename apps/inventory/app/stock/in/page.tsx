@@ -60,7 +60,7 @@ function StockInForm() {
           <div className="p-2 rounded-lg bg-green-500/10 border border-green-500/30">
             <ArrowDownCircle className="w-6 h-6 text-green-400" />
           </div>
-          <h1 className="text-3xl font-bold text-white neon-text">Stock In</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Stock In</h1>
         </div>
         <p className="text-muted-foreground mt-2">
           Receive inventory into a warehouse location.
@@ -75,7 +75,7 @@ function StockInForm() {
 
       <Card className="glass-card border-green-500/20">
         <CardHeader>
-          <CardTitle className="text-white">Receive Stock</CardTitle>
+          <CardTitle className="text-foreground">Receive Stock</CardTitle>
         </CardHeader>
         <CardContent>
           <form action={handleSubmit} className="space-y-6">
@@ -86,7 +86,7 @@ function StockInForm() {
               <select
                 name="productId"
                 required
-                className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-green-500"
+                className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500"
               >
                 <option value="">Select a product...</option>
                 {products.map((p) => (
@@ -104,7 +104,7 @@ function StockInForm() {
               <select
                 name="toLocationId"
                 required
-                className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-green-500"
+                className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500"
               >
                 <option value="">Select a location...</option>
                 {locations.map((loc) => (
@@ -125,7 +125,7 @@ function StockInForm() {
                   type="number"
                   min="1"
                   required
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-green-500"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500"
                   placeholder="Enter quantity"
                 />
               </div>
@@ -136,7 +136,7 @@ function StockInForm() {
                 </label>
                 <input
                   name="reference"
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-green-500"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500"
                   placeholder="e.g. PO-2025-001"
                 />
               </div>
@@ -149,7 +149,7 @@ function StockInForm() {
               <textarea
                 name="notes"
                 rows={2}
-                className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-green-500 resize-none"
+                className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500 resize-none"
                 placeholder="Additional notes..."
               />
             </div>
@@ -180,7 +180,7 @@ function StockInForm() {
 
 export default function StockInPage() {
   return (
-    <Suspense fallback={<div className="text-white">Loading...</div>}>
+    <Suspense fallback={<div className="text-foreground">Loading...</div>}>
       <StockInForm />
     </Suspense>
   );

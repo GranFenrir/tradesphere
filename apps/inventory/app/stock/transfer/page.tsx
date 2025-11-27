@@ -78,7 +78,7 @@ function StockTransferForm() {
           <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/30">
             <ArrowRightLeft className="w-6 h-6 text-blue-400" />
           </div>
-          <h1 className="text-3xl font-bold text-white neon-text">Stock Transfer</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Stock Transfer</h1>
         </div>
         <p className="text-muted-foreground mt-2">
           Move inventory between warehouse locations.
@@ -93,7 +93,7 @@ function StockTransferForm() {
 
       <Card className="glass-card border-blue-500/20">
         <CardHeader>
-          <CardTitle className="text-white">Transfer Stock</CardTitle>
+          <CardTitle className="text-foreground">Transfer Stock</CardTitle>
         </CardHeader>
         <CardContent>
           <form action={handleSubmit} className="space-y-6">
@@ -109,7 +109,7 @@ function StockTransferForm() {
                   setSelectedProduct(e.target.value);
                   setSelectedFromLocation("");
                 }}
-                className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value="">Select a product...</option>
                 {products.map((p) => (
@@ -131,7 +131,7 @@ function StockTransferForm() {
                   disabled={!selectedProduct}
                   value={selectedFromLocation}
                   onChange={(e) => setSelectedFromLocation(e.target.value)}
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
                 >
                   <option value="">
                     {selectedProduct ? "Select source..." : "Select product first..."}
@@ -155,7 +155,7 @@ function StockTransferForm() {
                   name="toLocationId"
                   required
                   disabled={!selectedFromLocation}
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
                 >
                   <option value="">
                     {selectedFromLocation ? "Select destination..." : "Select source first..."}
@@ -188,7 +188,7 @@ function StockTransferForm() {
                   min="1"
                   max={selectedFromLocation ? getStockAtLocation(selectedFromLocation) : undefined}
                   required
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                   placeholder="Enter quantity"
                 />
               </div>
@@ -199,7 +199,7 @@ function StockTransferForm() {
                 </label>
                 <input
                   name="reference"
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                   placeholder="e.g. TRF-2025-001"
                 />
               </div>
@@ -212,7 +212,7 @@ function StockTransferForm() {
               <textarea
                 name="notes"
                 rows={2}
-                className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+                className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
                 placeholder="e.g. Balancing stock between locations"
               />
             </div>
@@ -243,7 +243,7 @@ function StockTransferForm() {
 
 export default function StockTransferPage() {
   return (
-    <Suspense fallback={<div className="text-white">Loading...</div>}>
+    <Suspense fallback={<div className="text-foreground">Loading...</div>}>
       <StockTransferForm />
     </Suspense>
   );

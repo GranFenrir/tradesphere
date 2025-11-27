@@ -62,12 +62,12 @@ export default async function MovementsPage() {
         <div>
           <Link
             href="/stock"
-            className="text-muted-foreground hover:text-white flex items-center gap-1 mb-2 text-sm"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-1 mb-2 text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Stock
           </Link>
-          <h1 className="text-3xl font-bold text-white neon-text">Movement History</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Movement History</h1>
           <p className="text-muted-foreground mt-2">
             Track all stock movements across your warehouses.
           </p>
@@ -96,12 +96,12 @@ export default async function MovementsPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="glass-card border-white/10">
+        <Card className="glass-card border-border">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
               <History className="w-6 h-6 text-muted-foreground" />
               <div>
-                <p className="text-2xl font-bold text-white">{stats.total}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.total}</p>
                 <p className="text-xs text-muted-foreground">Total</p>
               </div>
             </div>
@@ -112,7 +112,7 @@ export default async function MovementsPage() {
             <div className="flex items-center gap-3">
               <ArrowDownCircle className="w-6 h-6 text-green-400" />
               <div>
-                <p className="text-2xl font-bold text-white">{stats.in}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.in}</p>
                 <p className="text-xs text-muted-foreground">Stock In</p>
               </div>
             </div>
@@ -123,7 +123,7 @@ export default async function MovementsPage() {
             <div className="flex items-center gap-3">
               <ArrowUpCircle className="w-6 h-6 text-red-400" />
               <div>
-                <p className="text-2xl font-bold text-white">{stats.out}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.out}</p>
                 <p className="text-xs text-muted-foreground">Stock Out</p>
               </div>
             </div>
@@ -134,7 +134,7 @@ export default async function MovementsPage() {
             <div className="flex items-center gap-3">
               <ArrowRightLeft className="w-6 h-6 text-blue-400" />
               <div>
-                <p className="text-2xl font-bold text-white">{stats.transfer}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.transfer}</p>
                 <p className="text-xs text-muted-foreground">Transfers</p>
               </div>
             </div>
@@ -143,9 +143,9 @@ export default async function MovementsPage() {
       </div>
 
       {/* Movements List */}
-      <Card className="glass-card border-white/10">
+      <Card className="glass-card border-border">
         <CardHeader>
-          <CardTitle className="text-white">Recent Movements</CardTitle>
+          <CardTitle className="text-foreground">Recent Movements</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -156,15 +156,15 @@ export default async function MovementsPage() {
               return (
                 <div
                   key={movement.id}
-                  className="flex items-start gap-4 p-4 rounded-lg bg-white/5 border border-white/10"
+                  className="flex items-start gap-4 p-4 rounded-lg bg-muted/50 border border-border"
                 >
                   <div className={`p-2 rounded-lg border ${config.color}`}>
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-medium text-white">{movement.product.name}</span>
-                      <span className="text-xs font-mono text-muted-foreground px-2 py-0.5 bg-white/5 rounded">
+                      <span className="font-medium text-foreground">{movement.product.name}</span>
+                      <span className="text-xs font-mono text-muted-foreground px-2 py-0.5 bg-muted/50 rounded">
                         {movement.product.sku}
                       </span>
                       <span className={`text-xs px-2 py-0.5 rounded border ${config.color}`}>
@@ -202,7 +202,7 @@ export default async function MovementsPage() {
                     )}
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-white">
+                    <p className="text-lg font-bold text-foreground">
                       {movement.type === "OUT" ? "-" : "+"}
                       {movement.quantity}
                     </p>

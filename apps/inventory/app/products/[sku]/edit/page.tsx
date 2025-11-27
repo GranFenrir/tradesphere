@@ -65,7 +65,7 @@ export default function EditProductPage() {
   if (loading) {
     return (
       <main className="min-h-screen p-8 flex items-center justify-center">
-        <div className="text-white/60">Loading product...</div>
+        <div className="text-muted-foreground">Loading product...</div>
       </main>
     )
   }
@@ -92,7 +92,7 @@ export default function EditProductPage() {
             <form action={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm text-white/70">
+                  <label htmlFor="name" className="text-sm text-muted-foreground">
                     Product Name
                   </label>
                   <input
@@ -101,12 +101,12 @@ export default function EditProductPage() {
                     name="name"
                     defaultValue={product.name}
                     required
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    className="w-full px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="sku" className="text-sm text-white/70">
+                  <label htmlFor="sku" className="text-sm text-muted-foreground">
                     SKU (cannot be changed)
                   </label>
                   <input
@@ -114,12 +114,12 @@ export default function EditProductPage() {
                     id="sku"
                     value={product.sku}
                     disabled
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white/50 cursor-not-allowed"
+                    className="w-full px-3 py-2 bg-muted/50 border border-border rounded-md text-muted-foreground cursor-not-allowed"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="category" className="text-sm text-white/70">
+                  <label htmlFor="category" className="text-sm text-muted-foreground">
                     Category
                   </label>
                   <input
@@ -128,12 +128,12 @@ export default function EditProductPage() {
                     name="category"
                     defaultValue={product.category}
                     required
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    className="w-full px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="currentStock" className="text-sm text-white/70">
+                  <label htmlFor="currentStock" className="text-sm text-muted-foreground">
                     Current Stock
                   </label>
                   <input
@@ -143,12 +143,12 @@ export default function EditProductPage() {
                     defaultValue={product.currentStock}
                     min="0"
                     required
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    className="w-full px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="price" className="text-sm text-white/70">
+                  <label htmlFor="price" className="text-sm text-muted-foreground">
                     Price ($)
                   </label>
                   <input
@@ -159,12 +159,12 @@ export default function EditProductPage() {
                     min="0"
                     step="0.01"
                     required
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    className="w-full px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="cost" className="text-sm text-white/70">
+                  <label htmlFor="cost" className="text-sm text-muted-foreground">
                     Cost ($)
                   </label>
                   <input
@@ -175,12 +175,12 @@ export default function EditProductPage() {
                     min="0"
                     step="0.01"
                     required
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    className="w-full px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="reorderPoint" className="text-sm text-white/70">
+                  <label htmlFor="reorderPoint" className="text-sm text-muted-foreground">
                     Reorder Point (Safety Stock)
                   </label>
                   <input
@@ -190,12 +190,12 @@ export default function EditProductPage() {
                     defaultValue={product.reorderPoint}
                     min="0"
                     required
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    className="w-full px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="maxStock" className="text-sm text-white/70">
+                  <label htmlFor="maxStock" className="text-sm text-muted-foreground">
                     Max Stock (Liquidity Cap)
                   </label>
                   <input
@@ -205,7 +205,7 @@ export default function EditProductPage() {
                     defaultValue={product.maxStock}
                     min="1"
                     required
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    className="w-full px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                 </div>
               </div>

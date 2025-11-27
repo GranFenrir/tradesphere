@@ -48,12 +48,12 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="rounded-md border border-white/10">
         <Table>
-          <TableHeader className="bg-white/5">
+          <TableHeader className="bg-muted/50">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="border-white/10 hover:bg-transparent">
+              <TableRow key={headerGroup.id} className="border-border hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="text-white">
+                    <TableHead key={header.id} className="text-foreground">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="border-white/5 hover:bg-white/5"
+                  className="border-border hover:bg-muted/30"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-muted-foreground">
@@ -97,7 +97,7 @@ export function DataTable<TData, TValue>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="border-white/10 text-white hover:bg-white/10"
+          className="border-border text-foreground hover:bg-muted/50"
         >
           Previous
         </Button>
@@ -106,7 +106,7 @@ export function DataTable<TData, TValue>({
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className="border-white/10 text-white hover:bg-white/10"
+          className="border-border text-foreground hover:bg-muted/50"
         >
           Next
         </Button>

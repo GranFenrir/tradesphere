@@ -63,7 +63,7 @@ function LocationTreeNode({ location, depth = 0 }: { location: LocationWithChild
   return (
     <div className="space-y-2">
       <div
-        className={`flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 transition-colors`}
+        className={`flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border hover:border-primary/30 transition-colors`}
         style={{ marginLeft: `${depth * 24}px` }}
       >
         <div className={`p-2 rounded-lg border ${colorClass}`}>
@@ -71,8 +71,8 @@ function LocationTreeNode({ location, depth = 0 }: { location: LocationWithChild
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-white">{location.name}</span>
-            <span className="text-xs font-mono text-muted-foreground px-2 py-0.5 bg-white/5 rounded">
+            <span className="font-medium text-foreground">{location.name}</span>
+            <span className="text-xs font-mono text-muted-foreground px-2 py-0.5 bg-muted/50 rounded">
               {location.code}
             </span>
             <span className={`text-xs px-2 py-0.5 rounded border ${colorClass}`}>
@@ -154,13 +154,13 @@ export default async function WarehouseDetailPage({
         <div>
           <Link
             href="/warehouses"
-            className="text-muted-foreground hover:text-white flex items-center gap-1 mb-2 text-sm"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-1 mb-2 text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Warehouses
           </Link>
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold text-white neon-text">{warehouse.name}</h1>
+            <h1 className="text-3xl font-bold text-foreground neon-text">{warehouse.name}</h1>
             <span
               className={`px-2 py-1 rounded-full text-xs ${
                 warehouse.isActive
@@ -194,7 +194,7 @@ export default async function WarehouseDetailPage({
             <div className="flex items-center gap-3">
               <Layers className="w-8 h-8 text-purple-400" />
               <div>
-                <p className="text-2xl font-bold text-white">{zoneCount}</p>
+                <p className="text-2xl font-bold text-foreground">{zoneCount}</p>
                 <p className="text-xs text-muted-foreground">Zones</p>
               </div>
             </div>
@@ -205,7 +205,7 @@ export default async function WarehouseDetailPage({
             <div className="flex items-center gap-3">
               <Package className="w-8 h-8 text-orange-400" />
               <div>
-                <p className="text-2xl font-bold text-white">{binCount}</p>
+                <p className="text-2xl font-bold text-foreground">{binCount}</p>
                 <p className="text-xs text-muted-foreground">Bins</p>
               </div>
             </div>
@@ -216,7 +216,7 @@ export default async function WarehouseDetailPage({
             <div className="flex items-center gap-3">
               <Box className="w-8 h-8 text-blue-400" />
               <div>
-                <p className="text-2xl font-bold text-white">{uniqueProducts}</p>
+                <p className="text-2xl font-bold text-foreground">{uniqueProducts}</p>
                 <p className="text-xs text-muted-foreground">Products</p>
               </div>
             </div>
@@ -227,7 +227,7 @@ export default async function WarehouseDetailPage({
             <div className="flex items-center gap-3">
               <Grid3X3 className="w-8 h-8 text-green-400" />
               <div>
-                <p className="text-2xl font-bold text-white">{totalStock.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-foreground">{totalStock.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground">Total Units</p>
               </div>
             </div>
@@ -237,9 +237,9 @@ export default async function WarehouseDetailPage({
 
       {/* Description */}
       {warehouse.description && (
-        <Card className="glass-card border-white/10">
+        <Card className="glass-card border-border">
           <CardHeader>
-            <CardTitle className="text-white text-sm">Description</CardTitle>
+            <CardTitle className="text-foreground text-sm">Description</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">{warehouse.description}</p>
@@ -248,9 +248,9 @@ export default async function WarehouseDetailPage({
       )}
 
       {/* Location Tree */}
-      <Card className="glass-card border-white/10">
+      <Card className="glass-card border-border">
         <CardHeader>
-          <CardTitle className="text-white">Location Structure</CardTitle>
+          <CardTitle className="text-foreground">Location Structure</CardTitle>
         </CardHeader>
         <CardContent>
           {locationTree.length > 0 ? (

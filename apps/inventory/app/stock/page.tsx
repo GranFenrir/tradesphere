@@ -50,7 +50,7 @@ export default async function StockPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white neon-text">Stock Overview</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Stock Overview</h1>
           <p className="text-muted-foreground mt-2">
             View and manage stock levels across all locations.
           </p>
@@ -93,7 +93,7 @@ export default async function StockPage() {
             <Package className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{totalUnits.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-foreground">{totalUnits.toLocaleString()}</div>
           </CardContent>
         </Card>
 
@@ -105,7 +105,7 @@ export default async function StockPage() {
             <Building2 className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{uniqueProducts}</div>
+            <div className="text-2xl font-bold text-foreground">{uniqueProducts}</div>
           </CardContent>
         </Card>
 
@@ -117,21 +117,21 @@ export default async function StockPage() {
             <MapPin className="h-4 w-4 text-green-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{uniqueLocations}</div>
+            <div className="text-2xl font-bold text-foreground">{uniqueLocations}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Stock Table */}
-      <Card className="glass-card border-white/10">
+      <Card className="glass-card border-border">
         <CardHeader>
-          <CardTitle className="text-white">Stock by Location</CardTitle>
+          <CardTitle className="text-foreground">Stock by Location</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/10">
+                <tr className="border-b border-border">
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Product</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">SKU</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Warehouse</th>
@@ -146,10 +146,10 @@ export default async function StockPage() {
                   return (
                     <tr
                       key={item.id}
-                      className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                      className="border-b border-border hover:bg-muted/50 transition-colors"
                     >
                       <td className="py-3 px-4">
-                        <span className="font-medium text-white">{item.product.name}</span>
+                        <span className="font-medium text-foreground">{item.product.name}</span>
                       </td>
                       <td className="py-3 px-4">
                         <span className="text-sm font-mono text-muted-foreground">
@@ -163,14 +163,14 @@ export default async function StockPage() {
                       </td>
                       <td className="py-3 px-4">
                         <div>
-                          <span className="text-sm text-white">{item.location.name}</span>
+                          <span className="text-sm text-foreground">{item.location.name}</span>
                           <span className="text-xs font-mono text-muted-foreground ml-2">
                             {item.location.code}
                           </span>
                         </div>
                       </td>
                       <td className="py-3 px-4 text-right">
-                        <span className="font-medium text-white">{item.quantity}</span>
+                        <span className="font-medium text-foreground">{item.quantity}</span>
                       </td>
                       <td className="py-3 px-4 text-center">
                         <span className={`px-2 py-1 rounded-full text-xs border ${color}`}>

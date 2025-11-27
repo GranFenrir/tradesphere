@@ -24,7 +24,7 @@ export default function NewProductPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white neon-text">Add New Product</h1>
+        <h1 className="text-3xl font-bold text-foreground neon-text">Add New Product</h1>
         <p className="text-muted-foreground mt-2">Enter product details to track inventory.</p>
       </div>
 
@@ -36,7 +36,7 @@ export default function NewProductPage() {
 
       <Card className="glass-card border-primary/20">
         <CardHeader>
-          <CardTitle className="text-white">Product Information</CardTitle>
+          <CardTitle className="text-foreground">Product Information</CardTitle>
         </CardHeader>
         <CardContent>
           <form action={handleSubmit} className="space-y-6">
@@ -46,7 +46,7 @@ export default function NewProductPage() {
                 <input
                   name="name"
                   required
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="e.g. Quantum Processor"
                 />
               </div>
@@ -55,7 +55,7 @@ export default function NewProductPage() {
                 <input
                   name="sku"
                   required
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="e.g. PROD-001"
                 />
               </div>
@@ -65,7 +65,7 @@ export default function NewProductPage() {
               <label className="text-sm font-medium text-muted-foreground">Category</label>
               <select
                 name="category"
-                className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="Electronics">Electronics</option>
                 <option value="Cybernetics">Cybernetics</option>
@@ -83,7 +83,7 @@ export default function NewProductPage() {
                   type="number"
                   step="0.01"
                   required
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="0.00"
                 />
               </div>
@@ -94,7 +94,7 @@ export default function NewProductPage() {
                   type="number"
                   step="0.01"
                   required
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="0.00"
                 />
               </div>
@@ -108,7 +108,7 @@ export default function NewProductPage() {
                   type="number"
                   required
                   defaultValue="0"
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
               <div className="space-y-2">
@@ -118,7 +118,7 @@ export default function NewProductPage() {
                   type="number"
                   required
                   defaultValue="10"
-                  className="w-full bg-black/20 border border-green-500/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-green-500"
+                  className="w-full bg-muted/50 border border-green-500/30 rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
               <div className="space-y-2">
@@ -128,7 +128,7 @@ export default function NewProductPage() {
                   type="number"
                   required
                   defaultValue="100"
-                  className="w-full bg-black/20 border border-blue-500/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full bg-muted/50 border border-blue-500/30 rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
             </div>

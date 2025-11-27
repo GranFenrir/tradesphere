@@ -64,7 +64,7 @@ export default async function LocationsPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white neon-text">Locations</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Locations</h1>
           <p className="text-muted-foreground mt-2">
             Manage storage locations across all warehouses.
           </p>
@@ -83,14 +83,14 @@ export default async function LocationsPage() {
           const Icon = typeIcons[type];
           const colorClass = typeColors[type];
           return (
-            <Card key={type} className="glass-card border-white/10">
+            <Card key={type} className="glass-card border-border">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
                   <div className={`p-2 rounded-lg border ${colorClass}`}>
                     <Icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-white">{count}</p>
+                    <p className="text-2xl font-bold text-foreground">{count}</p>
                     <p className="text-xs text-muted-foreground">{type}s</p>
                   </div>
                 </div>
@@ -102,13 +102,13 @@ export default async function LocationsPage() {
 
       {/* Locations by Warehouse */}
       {Object.values(locationsByWarehouse).map(({ warehouse, locations: whLocations }) => (
-        <Card key={warehouse.id} className="glass-card border-white/10">
+        <Card key={warehouse.id} className="glass-card border-border">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Building2 className="w-5 h-5 text-primary" />
-                <CardTitle className="text-white">{warehouse.name}</CardTitle>
-                <span className="text-xs font-mono text-muted-foreground px-2 py-1 bg-white/5 rounded">
+                <CardTitle className="text-foreground">{warehouse.name}</CardTitle>
+                <span className="text-xs font-mono text-muted-foreground px-2 py-1 bg-muted/50 rounded">
                   {warehouse.code}
                 </span>
               </div>
@@ -129,15 +129,15 @@ export default async function LocationsPage() {
                 return (
                   <div
                     key={location.id}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border hover:border-primary/30 transition-colors"
                   >
                     <div className={`p-2 rounded-lg border ${colorClass}`}>
                       <Icon className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium text-white">{location.name}</span>
-                        <span className="text-xs font-mono text-muted-foreground px-2 py-0.5 bg-white/5 rounded">
+                        <span className="font-medium text-foreground">{location.name}</span>
+                        <span className="text-xs font-mono text-muted-foreground px-2 py-0.5 bg-muted/50 rounded">
                           {location.code}
                         </span>
                         <span className={`text-xs px-2 py-0.5 rounded border ${colorClass}`}>
@@ -151,7 +151,7 @@ export default async function LocationsPage() {
                       )}
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-white">
+                      <p className="text-sm font-medium text-foreground">
                         {totalStock > 0 ? `${totalStock} units` : "Empty"}
                       </p>
                       {location._count.children > 0 && (

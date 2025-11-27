@@ -16,7 +16,50 @@ const MovementType = {
   TRANSFER: 'TRANSFER',
 } as const;
 
+const UserRole = {
+  ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER',
+  OPERATOR: 'OPERATOR',
+  VIEWER: 'VIEWER',
+} as const;
+
 async function main() {
+  // ============================================
+  // USERS
+  // ============================================
+  const users = [
+    {
+      email: 'admin@tradesphere.com',
+      name: 'System Admin',
+      role: UserRole.ADMIN,
+      isActive: true,
+      preferences: JSON.stringify({ theme: 'dark', notifications: { email: true, push: true } }),
+    },
+    {
+      email: 'emre.demir@tradesphere.com',
+      name: 'Emre Demir',
+      role: UserRole.MANAGER,
+      isActive: true,
+      preferences: JSON.stringify({ theme: 'dark', notifications: { email: true, push: false } }),
+    },
+    {
+      email: 'operator@tradesphere.com',
+      name: 'Warehouse Operator',
+      role: UserRole.OPERATOR,
+      isActive: true,
+      preferences: JSON.stringify({ theme: 'dark', notifications: { email: false, push: true } }),
+    },
+  ];
+
+  for (const user of users) {
+    await prisma.user.upsert({
+      where: { email: user.email },
+      update: {},
+      create: user,
+    });
+  }
+  console.log('✓ Users seeded');
+
   // ============================================
   // PRODUCTS
   // ============================================

@@ -137,8 +137,35 @@ model StockMovement {
   
   // Audit fields
   createdAt   DateTime     @default(now())
-  createdBy   String?      // User ID for future auth integration
+  createdBy   String?      // User ID reference
+  user        User?        @relation(fields: [createdBy], references: [id])
 
   @@map("stock_movements")
+}
+
+// ============================================
+// USER MANAGEMENT
+// ============================================
+// UserRole: "ADMIN" | "MANAGER" | "OPERATOR" | "VIEWER"
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  avatar      String?  // URL to avatar image
+  role        String   @default("OPERATOR") // "ADMIN" | "MANAGER" | "OPERATOR" | "VIEWER"
+  isActive    Boolean  @default(true)
+  
+  // Preferences (stored as JSON string for SQLite)
+  preferences String?  // JSON: { theme, notifications, language, timezone }
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastLoginAt DateTime?
+
+  // Relations
+  stockMovements StockMovement[]
+
+  @@map("users")
 }
 

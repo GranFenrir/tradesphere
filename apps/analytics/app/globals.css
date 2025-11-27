@@ -71,6 +71,36 @@
     --input: 260 30% 20%;
     --ring: 270 100% 60%;
   }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 260 50% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 260 50% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 50% 10%;
+
+    --primary: 270 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 190 100% 40%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 260 10% 90%;
+    --muted-foreground: 260 30% 40%;
+
+    --accent: 320 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 260 10% 85%;
+    --input: 260 10% 85%;
+    --ring: 270 100% 50%;
+  }
 }
 
 @layer base {
@@ -89,11 +119,20 @@
     background-color: rgba(30, 20, 50, 0.4);
   }
 
+  .light .glass {
+    @apply border-black/10;
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+
   .glass-card {
     @apply glass rounded-xl;
   }
 
   .neon-text {
     text-shadow: 0 0 10px rgba(168, 85, 247, 0.5), 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+
+  .light .neon-text {
+    text-shadow: none;
   }
 }

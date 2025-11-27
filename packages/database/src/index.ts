@@ -26,3 +26,11 @@ export const MovementType = {
 
 export type MovementType = (typeof MovementType)[keyof typeof MovementType];
 
+export const UserRole = {
+  ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER',
+  OPERATOR: 'OPERATOR',
+  VIEWER: 'VIEWER',
+} as const;
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];

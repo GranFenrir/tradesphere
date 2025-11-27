@@ -42,11 +42,11 @@ export default async function Page() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white neon-text">Inventory Management</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Inventory Management</h1>
           <p className="text-muted-foreground mt-2">Track and manage your global stock levels.</p>
         </div>
         <Link href="/products/new">
-          <button className="bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+          <button className="bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-[0_0_15px_rgba(168,85,247,0.4)]">
             <Plus className="w-4 h-4" />
             Add Product
           </button>
@@ -60,7 +60,7 @@ export default async function Page() {
             <Package className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{totalProducts}</div>
+            <div className="text-2xl font-bold text-foreground">{totalProducts}</div>
             <p className="text-xs text-muted-foreground">Real-time count</p>
           </CardContent>
         </Card>
@@ -70,7 +70,7 @@ export default async function Page() {
             <AlertTriangle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{lowStockCount}</div>
+            <div className="text-2xl font-bold text-foreground">{lowStockCount}</div>
             <p className="text-xs text-muted-foreground">Needs attention</p>
           </CardContent>
         </Card>
@@ -80,7 +80,7 @@ export default async function Page() {
             <DollarSign className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalValue)}
             </div>
             <p className="text-xs text-muted-foreground">Inventory Asset Value</p>
@@ -88,10 +88,10 @@ export default async function Page() {
         </Card>
       </div>
 
-      <Card className="glass-card border-white/5">
+      <Card className="glass-card border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-white">Products</CardTitle>
+            <CardTitle className="text-foreground">Products</CardTitle>
           </div>
         </CardHeader>
         <CardContent>

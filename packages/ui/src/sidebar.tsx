@@ -19,6 +19,10 @@ import {
     TrendingUp,
     PieChart,
     DollarSign,
+    Users,
+    User,
+    Bell,
+    Palette,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -67,6 +71,14 @@ const analyticsSubNav: NavItem[] = [
     { name: "Financials", href: "/analytics/financials", icon: DollarSign },
 ];
 
+// Sub-navigation for settings module
+const settingsSubNav: NavItem[] = [
+    { name: "Profile", href: "/settings", icon: User },
+    { name: "Users", href: "/settings/users", icon: Users },
+    { name: "Appearance", href: "/settings#appearance", icon: Palette },
+    { name: "Notifications", href: "/settings#notifications", icon: Bell },
+];
+
 export function Sidebar({ basePath = "" }: { basePath?: string }) {
     const pathname = usePathname();
     // Construct effective path to handle multi-zone basePaths
@@ -77,9 +89,11 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
     // Determine which module we're in
     const isInInventory = effectivePath.startsWith("/inventory");
     const isInAnalytics = effectivePath.startsWith("/analytics");
+    const isInSettings = effectivePath.startsWith("/settings");
     
     // Get sub-navigation based on current module
-    const subNavigation = isInInventory ? inventorySubNav : isInAnalytics ? analyticsSubNav : null;
+    const subNavigation = isInInventory ? inventorySubNav : isInAnalytics ? analyticsSubNav : isInSettings ? settingsSubNav : null;
+    const moduleLabel = isInInventory ? "Inventory Module" : isInAnalytics ? "Analytics Module" : isInSettings ? "Settings" : null;
 
     const isActive = (href: string) => {
         if (href === "/" || href === "/inventory" || href === "/analytics") {
@@ -89,12 +103,12 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
     };
 
     return (
-        <div className="flex flex-col w-64 h-screen fixed left-0 top-0 border-r border-white/10 bg-background/80 backdrop-blur-xl z-50">
+        <div className="flex flex-col w-64 h-screen fixed left-0 top-0 border-r border-border bg-background/80 backdrop-blur-xl z-50">
             <div className="p-6 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.5)]">
                     <Globe className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
+                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
                     TradeSphere
                 </span>
             </div>
@@ -114,13 +128,13 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
                                 "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group",
                                 active 
                                     ? "bg-primary text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]" 
-                                    : "text-muted-foreground hover:text-white hover:bg-white/5"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                             )}
                         >
                             <item.icon
                                 className={cn(
                                     "w-5 h-5 transition-colors",
-                                    active ? "text-white" : "group-hover:text-white"
+                                    active ? "text-white" : "group-hover:text-foreground"
                                 )}
                             />
                             <span className="font-medium">{item.name}</span>
@@ -134,7 +148,7 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
                 <>
                     <div className="px-4 pt-4 pb-2">
                         <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                            {isInInventory ? "Inventory Module" : "Analytics Module"}
+                            {moduleLabel}
                         </div>
                     </div>
                     <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
@@ -148,8 +162,8 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
                                             className={cn(
                                                 "w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition-all",
                                                 isParentActive
-                                                    ? "bg-white/10 text-white"
-                                                    : "text-muted-foreground hover:text-white hover:bg-white/5"
+                                                    ? "bg-muted text-foreground"
+                                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                             )}
                                         >
                                             <div className="flex items-center gap-3">
@@ -164,7 +178,7 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
                                             />
                                         </button>
                                         {stockOpen && (
-                                            <div className="ml-4 mt-1 space-y-1 border-l border-white/10 pl-3">
+                                            <div className="ml-4 mt-1 space-y-1 border-l border-border pl-3">
                                                 {item.children.map((child) => {
                                                     const isChildActive = isActive(child.href);
                                                     return (
@@ -175,7 +189,7 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
                                                                 "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all",
                                                                 isChildActive
                                                                     ? "bg-primary/80 text-white"
-                                                                    : "text-muted-foreground hover:text-white hover:bg-white/5"
+                                                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                                             )}
                                                         >
                                                             <child.icon className="w-3.5 h-3.5" />
@@ -198,7 +212,7 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
                                         "flex items-center gap-3 px-3 py-2 rounded-lg transition-all",
                                         active
                                             ? "bg-primary/80 text-white"
-                                            : "text-muted-foreground hover:text-white hover:bg-white/5"
+                                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                     )}
                                 >
                                     <item.icon className="w-4 h-4" />
@@ -213,13 +227,13 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
             {/* Spacer when no sub-nav */}
             {!subNavigation && <div className="flex-1" />}
 
-            <div className="p-4 border-t border-white/10">
+            <div className="p-4 border-t border-border">
                 <div className="glass-card p-4 flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold shadow-lg">
                         ED
                     </div>
                     <div className="flex-1 overflow-hidden">
-                        <p className="text-sm font-medium text-white truncate">Emre Demir</p>
+                        <p className="text-sm font-medium text-foreground truncate">Emre Demir</p>
                         <p className="text-xs text-muted-foreground truncate">Admin</p>
                     </div>
                 </div>

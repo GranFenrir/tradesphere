@@ -38,7 +38,7 @@ export default async function WarehousesPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white neon-text">Warehouses</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Warehouses</h1>
           <p className="text-muted-foreground mt-2">
             Manage your warehouse facilities and storage locations.
           </p>
@@ -61,7 +61,7 @@ export default async function WarehousesPage() {
             <Building2 className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{warehouses.length}</div>
+            <div className="text-2xl font-bold text-foreground">{warehouses.length}</div>
             <p className="text-xs text-muted-foreground mt-1">
               {warehouses.filter((w) => w.isActive).length} active
             </p>
@@ -76,7 +76,7 @@ export default async function WarehousesPage() {
             <MapPin className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {warehouseStats.reduce((sum, w) => sum + w.locationCount, 0)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -93,7 +93,7 @@ export default async function WarehousesPage() {
             <Package className="h-4 w-4 text-green-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {warehouseStats.reduce((sum, w) => sum + w.totalStock, 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -107,10 +107,10 @@ export default async function WarehousesPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {warehouseStats.map((warehouse) => (
           <Link key={warehouse.id} href={`/warehouses/${warehouse.id}`}>
-            <Card className="glass-card border-white/10 hover:border-primary/50 transition-all cursor-pointer group">
+            <Card className="glass-card border-border hover:border-primary/50 transition-all cursor-pointer group">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-white group-hover:text-primary transition-colors">
+                  <CardTitle className="text-foreground group-hover:text-primary transition-colors">
                     {warehouse.name}
                   </CardTitle>
                   <span
@@ -134,17 +134,17 @@ export default async function WarehousesPage() {
                     {warehouse.address}
                   </p>
                 )}
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
+                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
                   <div className="text-center">
-                    <p className="text-lg font-bold text-white">{warehouse.locationCount}</p>
+                    <p className="text-lg font-bold text-foreground">{warehouse.locationCount}</p>
                     <p className="text-xs text-muted-foreground">Locations</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-white">{warehouse.uniqueProducts}</p>
+                    <p className="text-lg font-bold text-foreground">{warehouse.uniqueProducts}</p>
                     <p className="text-xs text-muted-foreground">Products</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-white">
+                    <p className="text-lg font-bold text-foreground">
                       {warehouse.totalStock.toLocaleString()}
                     </p>
                     <p className="text-xs text-muted-foreground">Units</p>

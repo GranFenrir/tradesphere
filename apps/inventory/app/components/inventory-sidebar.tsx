@@ -60,7 +60,7 @@ export function InventorySidebar() {
   };
 
   return (
-    <div className="flex flex-col w-64 h-screen fixed left-0 top-0 border-r border-white/10 bg-background/80 backdrop-blur-xl z-50">
+    <div className="flex flex-col w-64 h-screen fixed left-0 top-0 border-r border-border bg-background/80 backdrop-blur-xl z-50">
       {/* Logo */}
       <div className="p-6 flex items-center gap-3">
         <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.5)]">
@@ -90,7 +90,7 @@ export function InventorySidebar() {
                   "flex items-center justify-center p-2 rounded-lg transition-all",
                   isActive
                     ? "bg-primary/20 text-primary"
-                    : "text-muted-foreground hover:text-white hover:bg-white/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 )}
                 title={item.name}
               >
@@ -120,7 +120,7 @@ export function InventorySidebar() {
                     "w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition-all",
                     isParentActive
                       ? "bg-white/10 text-white"
-                      : "text-muted-foreground hover:text-white hover:bg-white/5"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   )}
                 >
                   <div className="flex items-center gap-3">
@@ -135,7 +135,7 @@ export function InventorySidebar() {
                   />
                 </button>
                 {stockOpen && (
-                  <div className="ml-4 mt-1 space-y-1 border-l border-white/10 pl-3">
+                  <div className="ml-4 mt-1 space-y-1 border-l border-border pl-3">
                     {item.children.map((child) => {
                       const isChildActive =
                         child.href === "/stock"
@@ -149,7 +149,7 @@ export function InventorySidebar() {
                             "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all",
                             isChildActive
                               ? "bg-primary text-white shadow-[0_0_10px_rgba(168,85,247,0.3)]"
-                              : "text-muted-foreground hover:text-white hover:bg-white/5"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                           )}
                         >
                           <child.icon className="w-3.5 h-3.5" />
@@ -172,7 +172,7 @@ export function InventorySidebar() {
                 "flex items-center gap-3 px-3 py-2 rounded-lg transition-all",
                 isActive
                   ? "bg-primary text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]"
-                  : "text-muted-foreground hover:text-white hover:bg-white/5"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
               )}
             >
               <item.icon className="w-4 h-4" />
@@ -183,13 +183,13 @@ export function InventorySidebar() {
       </nav>
 
       {/* User */}
-      <div className="p-4 border-t border-white/10">
+      <div className="p-4 border-t border-border">
         <div className="glass-card p-4 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold shadow-lg">
             ED
           </div>
           <div className="flex-1 overflow-hidden">
-            <p className="text-sm font-medium text-white truncate">Emre Demir</p>
+            <p className="text-sm font-medium text-foreground truncate">Emre Demir</p>
             <p className="text-xs text-muted-foreground truncate">Admin</p>
           </div>
         </div>

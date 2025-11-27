@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white neon-text">Dashboard Overview</h1>
+        <h1 className="text-3xl font-bold text-foreground neon-text">Dashboard Overview</h1>
         <p className="text-muted-foreground mt-2">Welcome back, Admin. Here's what's happening today.</p>
       </div>
 
@@ -16,8 +16,8 @@ export default function Page() {
             <DollarSign className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">$45,231.89</div>
-            <p className="text-xs text-green-400 flex items-center mt-1">
+            <div className="text-2xl font-bold text-foreground">$45,231.89</div>
+            <p className="text-xs text-green-500 flex items-center mt-1">
               <ArrowUpRight className="w-3 h-3 mr-1" /> +20.1% from last month
             </p>
           </CardContent>
@@ -28,8 +28,8 @@ export default function Page() {
             <Users className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">+2350</div>
-            <p className="text-xs text-green-400 flex items-center mt-1">
+            <div className="text-2xl font-bold text-foreground">+2350</div>
+            <p className="text-xs text-green-500 flex items-center mt-1">
               <ArrowUpRight className="w-3 h-3 mr-1" /> +180.1% from last month
             </p>
           </CardContent>
@@ -40,8 +40,8 @@ export default function Page() {
             <CreditCard className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">+12,234</div>
-            <p className="text-xs text-green-400 flex items-center mt-1">
+            <div className="text-2xl font-bold text-foreground">+12,234</div>
+            <p className="text-xs text-green-500 flex items-center mt-1">
               <ArrowUpRight className="w-3 h-3 mr-1" /> +19% from last month
             </p>
           </CardContent>
@@ -52,8 +52,8 @@ export default function Page() {
             <Activity className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">+573</div>
-            <p className="text-xs text-green-400 flex items-center mt-1">
+            <div className="text-2xl font-bold text-foreground">+573</div>
+            <p className="text-xs text-green-500 flex items-center mt-1">
               <ArrowUpRight className="w-3 h-3 mr-1" /> +201 since last hour
             </p>
           </CardContent>
@@ -61,9 +61,9 @@ export default function Page() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4 glass-card border-white/5">
+        <Card className="col-span-4 glass-card border-border">
           <CardHeader>
-            <CardTitle className="text-white">Overview</CardTitle>
+            <CardTitle className="text-foreground">Overview</CardTitle>
             <CardDescription className="text-muted-foreground">Monthly revenue breakdown.</CardDescription>
           </CardHeader>
           <CardContent className="pl-2">
@@ -77,9 +77,9 @@ export default function Page() {
             </div>
           </CardContent>
         </Card>
-        <Card className="col-span-3 glass-card border-white/5">
+        <Card className="col-span-3 glass-card border-border">
           <CardHeader>
-            <CardTitle className="text-white">Recent Sales</CardTitle>
+            <CardTitle className="text-foreground">Recent Sales</CardTitle>
             <CardDescription className="text-muted-foreground">You made 265 sales this month.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -92,14 +92,14 @@ export default function Page() {
                 { name: "Sofia Davis", email: "sofia.davis@email.com", amount: "+$39.00" }
               ].map((sale, i) => (
                 <div key={i} className="flex items-center">
-                  <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white mr-4">
+                  <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-foreground mr-4">
                     {sale.name.charAt(0)}
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none text-white">{sale.name}</p>
+                    <p className="text-sm font-medium leading-none text-foreground">{sale.name}</p>
                     <p className="text-sm text-muted-foreground">{sale.email}</p>
                   </div>
-                  <div className="ml-auto font-medium text-white">{sale.amount}</div>
+                  <div className="ml-auto font-medium text-foreground">{sale.amount}</div>
                 </div>
               ))}
             </div>

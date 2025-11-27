@@ -89,7 +89,7 @@ function NewLocationForm() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white neon-text">Add New Location</h1>
+        <h1 className="text-3xl font-bold text-foreground neon-text">Add New Location</h1>
         <p className="text-muted-foreground mt-2">
           Create a storage location within a warehouse.
         </p>
@@ -103,7 +103,7 @@ function NewLocationForm() {
 
       <Card className="glass-card border-primary/20">
         <CardHeader>
-          <CardTitle className="text-white">Location Information</CardTitle>
+          <CardTitle className="text-foreground">Location Information</CardTitle>
         </CardHeader>
         <CardContent>
           <form action={handleSubmit} className="space-y-6">
@@ -116,7 +116,7 @@ function NewLocationForm() {
                 required
                 value={selectedWarehouse}
                 onChange={(e) => setSelectedWarehouse(e.target.value)}
-                className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="">Select a warehouse...</option>
                 {warehouses.map((wh) => (
@@ -137,7 +137,7 @@ function NewLocationForm() {
                   required
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="ZONE">Zone</option>
                   <option value="RACK">Rack</option>
@@ -156,7 +156,7 @@ function NewLocationForm() {
                 <select
                   name="parentId"
                   disabled={selectedType === "ZONE" || !selectedWarehouse}
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
                 >
                   <option value="">
                     {selectedType === "ZONE" ? "N/A (Top Level)" : "Select parent..."}
@@ -178,7 +178,7 @@ function NewLocationForm() {
                 <input
                   name="name"
                   required
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder={`e.g. ${selectedType === "ZONE" ? "Zone A" : selectedType === "RACK" ? "Rack 1" : selectedType === "SHELF" ? "Shelf 3" : "Bin A1"}`}
                 />
               </div>
@@ -190,7 +190,7 @@ function NewLocationForm() {
                 <input
                   name="code"
                   required
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white font-mono focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground font-mono focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="e.g. WH001-A-R1-S3"
                 />
                 <p className="text-xs text-muted-foreground">
@@ -208,7 +208,7 @@ function NewLocationForm() {
                   name="capacity"
                   type="number"
                   min="1"
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="Maximum units this bin can hold"
                 />
               </div>
@@ -236,7 +236,7 @@ function NewLocationForm() {
 
 export default function NewLocationPage() {
   return (
-    <Suspense fallback={<div className="text-white">Loading...</div>}>
+    <Suspense fallback={<div className="text-foreground">Loading...</div>}>
       <NewLocationForm />
     </Suspense>
   );

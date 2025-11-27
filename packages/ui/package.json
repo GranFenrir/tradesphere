@@ -7,7 +7,8 @@
     "./utils": "./src/utils.ts",
     "./card": "./src/card.tsx",
     "./table": "./src/table.tsx",
-    "./data-table": "./src/data-table.tsx"
+    "./data-table": "./src/data-table.tsx",
+    "./theme-sync": "./src/theme-sync.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
