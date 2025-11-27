@@ -8,10 +8,8 @@ const __dirname = path.dirname(__filename);
 const nextConfig = {
     basePath: "/analytics",
     transpilePackages: ["@repo/ui", "@repo/database"],
-    experimental: {
-        turbo: {
-            root: path.resolve(__dirname, "../../"),
-        },
+    turbopack: {
+        root: path.resolve(__dirname, "../../"),
     },
 };
 

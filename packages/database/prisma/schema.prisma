@@ -7,6 +7,16 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+// ============================================
+// TYPE CONSTANTS (SQLite doesn't support enums)
+// ============================================
+// LocationType: "ZONE" | "RACK" | "SHELF" | "BIN"
+// MovementType: "IN" | "OUT" | "TRANSFER"
+
+// ============================================
+// CORE MODELS
+// ============================================
+
 model Product {
   id          String   @id @default(cuid())
   name        String
@@ -25,5 +35,110 @@ model Product {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  // Relations
+  stockItems     StockItem[]
+  stockMovements StockMovement[]
+
   @@map("products")
 }
+
+// ============================================
+// WAREHOUSE MANAGEMENT
+// ============================================
+
+model Warehouse {
+  id          String   @id @default(cuid())
+  name        String
+  code        String   @unique // Short code like "WH-001"
+  address     String?
+  description String?
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  locations   Location[]
+
+  @@map("warehouses")
+}
+
+model Location {
+  id          String       @id @default(cuid())
+  name        String       // e.g., "Zone A", "Rack 1", "Shelf 3", "Bin A1"
+  code        String       // e.g., "WH001-A-R1-S3-B1"
+  type        String       // "ZONE" | "RACK" | "SHELF" | "BIN"
+  capacity    Int?         // Optional max capacity
+  
+  // Self-referential tree structure
+  parentId    String?
+  parent      Location?    @relation("LocationTree", fields: [parentId], references: [id])
+  children    Location[]   @relation("LocationTree")
+  
+  // Warehouse relation
+  warehouseId String
+  warehouse   Warehouse    @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  stockItems          StockItem[]
+  outgoingMovements   StockMovement[] @relation("FromLocation")
+  incomingMovements   StockMovement[] @relation("ToLocation")
+
+  @@unique([warehouseId, code])
+  @@map("locations")
+}
+
+// ============================================
+// STOCK TRACKING
+// ============================================
+
+model StockItem {
+  id          String   @id @default(cuid())
+  quantity    Int      @default(0)
+  
+  // Product relation
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  // Location relation
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Composite unique: one stock record per product per location
+  @@unique([productId, locationId])
+  @@map("stock_items")
+}
+
+model StockMovement {
+  id          String       @id @default(cuid())
+  type        String       // "IN" | "OUT" | "TRANSFER"
+  quantity    Int
+  reference   String?      // PO number, SO number, transfer ref, etc.
+  notes       String?
+  
+  // Product relation
+  productId   String
+  product     Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  // For IN movements: toLocation only
+  // For OUT movements: fromLocation only
+  // For TRANSFER: both fromLocation and toLocation
+  fromLocationId String?
+  fromLocation   Location?  @relation("FromLocation", fields: [fromLocationId], references: [id])
+  
+  toLocationId   String?
+  toLocation     Location?  @relation("ToLocation", fields: [toLocationId], references: [id])
+  
+  // Audit fields
+  createdAt   DateTime     @default(now())
+  createdBy   String?      // User ID for future auth integration
+
+  @@map("stock_movements")
+}
+

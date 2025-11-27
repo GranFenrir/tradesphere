@@ -7,10 +7,8 @@ const __dirname = path.dirname(__filename);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     transpilePackages: ["@repo/ui"],
-    experimental: {
-        turbo: {
-            root: path.resolve(__dirname, "../../"),
-        },
+    turbopack: {
+        root: path.resolve(__dirname, "../../"),
     },
     async rewrites() {
         const INVENTORY_URL = process.env.INVENTORY_URL || "http://localhost:3001";

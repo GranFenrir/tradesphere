@@ -1,0 +1,280 @@
+import { prisma } from "@repo/database";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/card";
+import { Button } from "@repo/ui/button";
+import { 
+  MapPin, 
+  Package, 
+  Plus, 
+  ChevronRight, 
+  Layers, 
+  Grid3X3, 
+  Box,
+  ArrowLeft
+} from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+// Type icons based on location type
+const typeIcons = {
+  ZONE: Layers,
+  RACK: Grid3X3,
+  SHELF: Box,
+  BIN: Package,
+};
+
+const typeColors = {
+  ZONE: "text-purple-400 bg-purple-500/10 border-purple-500/30",
+  RACK: "text-blue-400 bg-blue-500/10 border-blue-500/30",
+  SHELF: "text-green-400 bg-green-500/10 border-green-500/30",
+  BIN: "text-orange-400 bg-orange-500/10 border-orange-500/30",
+};
+
+interface LocationFromDB {
+  id: string;
+  name: string;
+  code: string;
+  type: string;
+  capacity: number | null;
+  parentId: string | null;
+  stockItems: { quantity: number; product: { name: string; sku: string } }[];
+}
+
+interface LocationWithChildren extends LocationFromDB {
+  children: LocationWithChildren[];
+}
+
+function buildLocationTree(
+  locations: LocationFromDB[],
+  parentId: string | null = null
+): LocationWithChildren[] {
+  return locations
+    .filter((loc) => loc.parentId === parentId)
+    .map((loc) => ({
+      ...loc,
+      children: buildLocationTree(locations, loc.id),
+    }));
+}
+
+function LocationTreeNode({ location, depth = 0 }: { location: LocationWithChildren; depth?: number }) {
+  const Icon = typeIcons[location.type as keyof typeof typeIcons] || Box;
+  const colorClass = typeColors[location.type as keyof typeof typeColors] || typeColors.BIN;
+  const totalStock = location.stockItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  return (
+    <div className="space-y-2">
+      <div
+        className={`flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 transition-colors`}
+        style={{ marginLeft: `${depth * 24}px` }}
+      >
+        <div className={`p-2 rounded-lg border ${colorClass}`}>
+          <Icon className="w-4 h-4" />
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-white">{location.name}</span>
+            <span className="text-xs font-mono text-muted-foreground px-2 py-0.5 bg-white/5 rounded">
+              {location.code}
+            </span>
+            <span className={`text-xs px-2 py-0.5 rounded border ${colorClass}`}>
+              {location.type}
+            </span>
+          </div>
+          {location.stockItems.length > 0 && (
+            <div className="mt-1 text-xs text-muted-foreground">
+              {totalStock} units • {location.stockItems.length} product(s)
+            </div>
+          )}
+        </div>
+        {location.capacity && (
+          <div className="text-sm text-muted-foreground">
+            Cap: {location.capacity}
+          </div>
+        )}
+        {location.children.length > 0 && (
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+        )}
+      </div>
+      {location.children.length > 0 && (
+        <div className="space-y-2">
+          {location.children.map((child) => (
+            <LocationTreeNode key={child.id} location={child} depth={depth + 1} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default async function WarehouseDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  const warehouse = await prisma.warehouse.findUnique({
+    where: { id },
+    include: {
+      locations: {
+        include: {
+          stockItems: {
+            include: {
+              product: {
+                select: { name: true, sku: true },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!warehouse) {
+    notFound();
+  }
+
+  const locationTree = buildLocationTree(warehouse.locations);
+  
+  const totalStock = warehouse.locations.reduce(
+    (sum, loc) => sum + loc.stockItems.reduce((s, item) => s + item.quantity, 0),
+    0
+  );
+  
+  const uniqueProducts = new Set(
+    warehouse.locations.flatMap((loc) => loc.stockItems.map((item) => item.productId))
+  ).size;
+
+  const zoneCount = warehouse.locations.filter((l) => l.type === "ZONE").length;
+  const binCount = warehouse.locations.filter((l) => l.type === "BIN").length;
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <Link
+            href="/warehouses"
+            className="text-muted-foreground hover:text-white flex items-center gap-1 mb-2 text-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Warehouses
+          </Link>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-white neon-text">{warehouse.name}</h1>
+            <span
+              className={`px-2 py-1 rounded-full text-xs ${
+                warehouse.isActive
+                  ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                  : "bg-red-500/20 text-red-400 border border-red-500/30"
+              }`}
+            >
+              {warehouse.isActive ? "Active" : "Inactive"}
+            </span>
+          </div>
+          <p className="text-muted-foreground mt-1 font-mono">{warehouse.code}</p>
+          {warehouse.address && (
+            <p className="text-muted-foreground mt-1 flex items-center gap-2">
+              <MapPin className="w-4 h-4" />
+              {warehouse.address}
+            </p>
+          )}
+        </div>
+        <Link href={`/locations/new?warehouseId=${warehouse.id}`}>
+          <Button className="shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Location
+          </Button>
+        </Link>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="glass-card border-primary/20">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <Layers className="w-8 h-8 text-purple-400" />
+              <div>
+                <p className="text-2xl font-bold text-white">{zoneCount}</p>
+                <p className="text-xs text-muted-foreground">Zones</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-primary/20">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <Package className="w-8 h-8 text-orange-400" />
+              <div>
+                <p className="text-2xl font-bold text-white">{binCount}</p>
+                <p className="text-xs text-muted-foreground">Bins</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-primary/20">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <Box className="w-8 h-8 text-blue-400" />
+              <div>
+                <p className="text-2xl font-bold text-white">{uniqueProducts}</p>
+                <p className="text-xs text-muted-foreground">Products</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-primary/20">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <Grid3X3 className="w-8 h-8 text-green-400" />
+              <div>
+                <p className="text-2xl font-bold text-white">{totalStock.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">Total Units</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Description */}
+      {warehouse.description && (
+        <Card className="glass-card border-white/10">
+          <CardHeader>
+            <CardTitle className="text-white text-sm">Description</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">{warehouse.description}</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Location Tree */}
+      <Card className="glass-card border-white/10">
+        <CardHeader>
+          <CardTitle className="text-white">Location Structure</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {locationTree.length > 0 ? (
+            <div className="space-y-2">
+              {locationTree.map((location) => (
+                <LocationTreeNode key={location.id} location={location} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">
+                No locations yet. Add zones, racks, shelves, and bins to organize this warehouse.
+              </p>
+              <Link href={`/locations/new?warehouseId=${warehouse.id}`} className="mt-4 inline-block">
+                <Button variant="outline">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add First Location
+                </Button>
+              </Link>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
