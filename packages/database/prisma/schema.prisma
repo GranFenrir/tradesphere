@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  sku         String   @unique
+  category    String
+  
+  // The Basics
+  currentStock Int      @default(0)
+  price        Decimal
+  cost         Decimal // Cost to acquire
+  
+  // The "Balance" Fields
+  reorderPoint Int      @default(10) // Safety Stock / Min Level
+  maxStock     Int      @default(100) // Liquidity Cap / Max Level
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("products")
+}

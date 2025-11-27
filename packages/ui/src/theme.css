@@ -1,0 +1,77 @@
+:root {
+  /* Deep Space Glass Theme */
+  --background: 260 50% 5%; /* Very dark purple/black */
+  --foreground: 210 40% 98%; /* Soft white */
+
+  --card: 260 50% 10%; /* Slightly lighter dark purple */
+  --card-foreground: 210 40% 98%;
+
+  --popover: 260 50% 10%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 270 100% 60%; /* Neon Purple */
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 190 100% 50%; /* Neon Cyan */
+  --secondary-foreground: 260 50% 5%;
+
+  --muted: 260 30% 20%;
+  --muted-foreground: 215 20% 65%;
+
+  --accent: 320 100% 60%; /* Neon Pink */
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 260 30% 20%;
+  --input: 260 30% 20%;
+  --ring: 270 100% 60%;
+
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: 260 50% 5%;
+  --foreground: 210 40% 98%;
+
+  --card: 260 50% 10%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 260 50% 10%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 270 100% 60%;
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 190 100% 50%;
+  --secondary-foreground: 260 50% 5%;
+
+  --muted: 260 30% 20%;
+  --muted-foreground: 215 20% 65%;
+
+  --accent: 320 100% 60%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 260 30% 20%;
+  --input: 260 30% 20%;
+  --ring: 270 100% 60%;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-opacity-20 backdrop-filter backdrop-blur-lg border border-white/10 shadow-lg;
+    background-color: rgba(30, 20, 50, 0.4);
+  }
+  
+  .glass-card {
+    @apply glass rounded-xl;
+  }
+
+  .neon-text {
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5), 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+}

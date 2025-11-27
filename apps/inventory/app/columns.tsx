@@ -1,0 +1,92 @@
+"use client"
+
+import { ColumnDef } from "@tanstack/react-table"
+import { ArrowUpDown } from "lucide-react"
+import { Button } from "@repo/ui/button"
+import { ProductActions } from "./product-actions"
+
+export type Product = {
+  id: string
+  name: string
+  category: string
+  stock: number
+  price: number
+  status: string
+  statusColor: string
+}
+
+export const columns: ColumnDef<Product>[] = [
+  {
+    accessorKey: "id",
+    header: "SKU",
+    cell: ({ row }) => <div className="font-medium text-white">{row.getValue("id")}</div>,
+  },
+  {
+    accessorKey: "name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-transparent hover:text-white p-0"
+        >
+          Product Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: "category",
+    header: "Category",
+  },
+  {
+    accessorKey: "stock",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-transparent hover:text-white p-0"
+        >
+          Stock
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: "price",
+    header: "Price",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("price"))
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount)
+ 
+      return <div className="font-medium">{formatted}</div>
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.original.status
+      const color = row.original.statusColor
+      
+      return (
+        <span className={`px-2 py-1 rounded-full text-xs ${color} bg-white/5 border border-white/10`}>
+          {status}
+        </span>
+      )
+    },
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      return <ProductActions sku={row.original.id} />
+    },
+  },
+]

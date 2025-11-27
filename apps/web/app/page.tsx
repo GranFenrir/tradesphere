@@ -1,102 +1,111 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@repo/ui/card";
+import { Activity, CreditCard, DollarSign, Users, ArrowUpRight } from "lucide-react";
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
-
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
-
+export default function Page() {
   return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold text-white neon-text">Dashboard Overview</h1>
+        <p className="text-muted-foreground mt-2">Welcome back, Admin. Here's what's happening today.</p>
+      </div>
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="glass-card border-primary/20">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">$45,231.89</div>
+            <p className="text-xs text-green-400 flex items-center mt-1">
+              <ArrowUpRight className="w-3 h-3 mr-1" /> +20.1% from last month
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-blue-500/20">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Subscriptions</CardTitle>
+            <Users className="h-4 w-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">+2350</div>
+            <p className="text-xs text-green-400 flex items-center mt-1">
+              <ArrowUpRight className="w-3 h-3 mr-1" /> +180.1% from last month
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-purple-500/20">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Sales</CardTitle>
+            <CreditCard className="h-4 w-4 text-purple-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">+12,234</div>
+            <p className="text-xs text-green-400 flex items-center mt-1">
+              <ArrowUpRight className="w-3 h-3 mr-1" /> +19% from last month
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-red-500/20">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Active Now</CardTitle>
+            <Activity className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">+573</div>
+            <p className="text-xs text-green-400 flex items-center mt-1">
+              <ArrowUpRight className="w-3 h-3 mr-1" /> +201 since last hour
+            </p>
+          </CardContent>
+        </Card>
+      </div>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turborepo.com/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://turborepo.com?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turborepo.com →
-        </a>
-      </footer>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-4 glass-card border-white/5">
+          <CardHeader>
+            <CardTitle className="text-white">Overview</CardTitle>
+            <CardDescription className="text-muted-foreground">Monthly revenue breakdown.</CardDescription>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <div className="h-[200px] flex items-end justify-between gap-2 pt-4 px-4">
+              {[40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 50, 95].map((h, i) => (
+                <div key={i} className="w-full bg-primary/20 rounded-t-sm relative group overflow-hidden" style={{ height: `${h}%` }}>
+                  <div className="absolute bottom-0 left-0 w-full bg-primary transition-all duration-500 h-0 group-hover:h-full opacity-50"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-primary/50 to-transparent"></div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="col-span-3 glass-card border-white/5">
+          <CardHeader>
+            <CardTitle className="text-white">Recent Sales</CardTitle>
+            <CardDescription className="text-muted-foreground">You made 265 sales this month.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-8">
+              {[
+                { name: "Olivia Martin", email: "olivia.martin@email.com", amount: "+$1,999.00" },
+                { name: "Jackson Lee", email: "jackson.lee@email.com", amount: "+$39.00" },
+                { name: "Isabella Nguyen", email: "isabella.nguyen@email.com", amount: "+$299.00" },
+                { name: "William Kim", email: "will@email.com", amount: "+$99.00" },
+                { name: "Sofia Davis", email: "sofia.davis@email.com", amount: "+$39.00" }
+              ].map((sale, i) => (
+                <div key={i} className="flex items-center">
+                  <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white mr-4">
+                    {sale.name.charAt(0)}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none text-white">{sale.name}</p>
+                    <p className="text-sm text-muted-foreground">{sale.email}</p>
+                  </div>
+                  <div className="ml-auto font-medium text-white">{sale.amount}</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
