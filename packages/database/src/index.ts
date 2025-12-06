@@ -34,3 +34,27 @@ export const UserRole = {
 } as const;
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+
+// Purchase Order Status
+export const POStatus = {
+  DRAFT: 'DRAFT',
+  SENT: 'SENT',
+  CONFIRMED: 'CONFIRMED',
+  PARTIAL: 'PARTIAL',
+  RECEIVED: 'RECEIVED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export type POStatus = (typeof POStatus)[keyof typeof POStatus];
+
+// Sales Order Status
+export const OrderStatus = {
+  DRAFT: 'DRAFT',
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  SHIPPED: 'SHIPPED',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];

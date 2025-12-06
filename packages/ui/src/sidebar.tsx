@@ -23,6 +23,9 @@ import {
     User,
     Bell,
     Palette,
+    Truck,
+    ShoppingCart,
+    ClipboardList,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -62,6 +65,9 @@ const inventorySubNav: NavItem[] = [
             { name: "History", href: "/inventory/stock/movements", icon: History },
         ],
     },
+    { name: "Suppliers", href: "/inventory/suppliers", icon: Truck },
+    { name: "Purchase Orders", href: "/inventory/purchase-orders", icon: ClipboardList },
+    { name: "Sales Orders", href: "/inventory/sales-orders", icon: ShoppingCart },
 ];
 
 // Sub-navigation for analytics module

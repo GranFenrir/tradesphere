@@ -18,7 +18,7 @@
 
 ## Overview
 
-TradeSphere is designed to solve the fundamental inventory management challenge: balancing **Liquidity** (cash flow) against **Availability** (stockouts). It provides real-time visibility into stock levels, warehouse operations, and the financial impact of inventory decisions.
+TradeSphere is designed to solve the fundamental inventory management challenge: balancing **Liquidity** (cash flow) against **Availability** (stockouts). It provides real-time visibility into stock levels, warehouse operations, supplier relationships, and the financial impact of inventory decisions.
 
 ### Core Philosophy
 
@@ -38,6 +38,24 @@ Every product has two critical thresholds:
 - **Hierarchical Locations**: Zone → Rack → Shelf → Bin structure
 - **Stock Movements**: Track IN, OUT, and TRANSFER operations
 - **Real-time Alerts**: Low stock and overstock warnings
+
+### 🏭 Supplier Management
+- **Supplier Directory**: Manage supplier contacts and business terms
+- **Product Sourcing**: Link products to multiple suppliers with pricing
+- **Lead Time Tracking**: Per-supplier and per-product lead times
+- **Supplier-Specific SKUs**: Track supplier's product codes
+
+### 📋 Purchase Orders
+- **Order Creation**: Create POs linked to suppliers
+- **Order Workflow**: Draft → Sent → Confirmed → Received
+- **Receiving**: Receive goods into warehouse with automatic stock updates
+- **Order History**: Full audit trail of purchase activity
+
+### 🛒 Sales Orders
+- **Customer Orders**: Create orders for customers
+- **Order Workflow**: Draft → Pending → Confirmed → Shipped → Delivered
+- **Shipping**: Ship from warehouse with automatic stock reduction
+- **Revenue Tracking**: Track completed order value
 
 ### 📊 Analytics Dashboard
 - **Liquidity Tied Up**: Capital invested in inventory (cost × stock)
@@ -92,6 +110,9 @@ tradesphere/
 │   │   │   ├── warehouses/        # Warehouse management
 │   │   │   ├── locations/         # Location hierarchy
 │   │   │   ├── stock/             # Stock operations
+│   │   │   ├── suppliers/         # Supplier management
+│   │   │   ├── purchase-orders/   # Purchase order workflow
+│   │   │   ├── sales-orders/      # Sales order workflow
 │   │   │   └── actions.ts         # Server Actions
 │   │   └── next.config.js         # basePath: "/inventory"
 │   │
@@ -180,6 +201,9 @@ pnpm dev
 Access the apps:
 - **Dashboard**: http://localhost:3000
 - **Inventory**: http://localhost:3000/inventory
+- **Suppliers**: http://localhost:3000/inventory/suppliers
+- **Purchase Orders**: http://localhost:3000/inventory/purchase-orders
+- **Sales Orders**: http://localhost:3000/inventory/sales-orders
 - **Analytics**: http://localhost:3000/analytics
 - **Settings**: http://localhost:3000/settings
 
@@ -203,12 +227,25 @@ pnpm lint
 ### Schema Overview
 
 ```
-Product ──┬── StockItem ──── Location ──── Warehouse
-          │
-          └── StockMovement ─┬── fromLocation
-                             └── toLocation
-                             
-User ──── StockMovement (audit trail)
+                                    ┌─────────────┐
+                                    │   Product   │
+                                    └──────┬──────┘
+           ┌──────────────┬───────────────┼───────────────┬──────────────┐
+           │              │               │               │              │
+           ▼              ▼               ▼               ▼              ▼
+    ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐
+    │ StockItem  │ │StockMovement│ │SupplierProduct│ │POItem    │ │SOItem    │
+    └─────┬──────┘ └────┬───────┘ └─────┬──────┘ └─────┬──────┘ └─────┬──────┘
+          │             │               │              │              │
+          ▼             ▼               ▼              ▼              ▼
+    ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐
+    │  Location  │ │   User     │ │  Supplier  │ │PurchaseOrder│ │SalesOrder │
+    └─────┬──────┘ └────────────┘ └────────────┘ └────────────┘ └─────┬──────┘
+          │                                                           │
+          ▼                                                           ▼
+    ┌────────────┐                                              ┌────────────┐
+    │ Warehouse  │                                              │  Customer  │
+    └────────────┘                                              └────────────┘
 ```
 
 ### Key Models
@@ -221,6 +258,34 @@ User ──── StockMovement (audit trail)
 | `StockItem` | Quantity of a product at a specific location |
 | `StockMovement` | Audit trail of IN/OUT/TRANSFER operations |
 | `User` | Team members with roles and preferences |
+| `Supplier` | Vendor contacts and business terms |
+| `SupplierProduct` | Product pricing per supplier |
+| `PurchaseOrder` | Orders to suppliers for replenishment |
+| `PurchaseOrderItem` | Line items on purchase orders |
+| `Customer` | Customer contacts for sales |
+| `SalesOrder` | Customer orders for fulfillment |
+| `SalesOrderItem` | Line items on sales orders |
+
+### Type Constants
+
+Since SQLite doesn't support enums, we use string constants:
+
+```typescript
+// Location types
+LocationType.ZONE | LocationType.RACK | LocationType.SHELF | LocationType.BIN
+
+// Stock movement types
+MovementType.IN | MovementType.OUT | MovementType.TRANSFER
+
+// User roles
+UserRole.ADMIN | UserRole.MANAGER | UserRole.OPERATOR | UserRole.VIEWER
+
+// Purchase order status
+POStatus.DRAFT | POStatus.SENT | POStatus.CONFIRMED | POStatus.PARTIAL | POStatus.RECEIVED | POStatus.CANCELLED
+
+// Sales order status
+OrderStatus.DRAFT | OrderStatus.PENDING | OrderStatus.CONFIRMED | OrderStatus.SHIPPED | OrderStatus.DELIVERED | OrderStatus.CANCELLED
+```
 
 ### Database Commands
 
@@ -237,6 +302,51 @@ pnpm --filter @repo/database db:studio
 # Reset database (careful in production!)
 pnpm --filter @repo/database db:push --force-reset
 ```
+
+---
+
+## Workflows
+
+### Purchase Order Workflow
+
+```
+┌───────┐    ┌───────┐    ┌───────────┐    ┌──────────┐
+│ DRAFT │───▶│ SENT  │───▶│ CONFIRMED │───▶│ RECEIVED │
+└───────┘    └───────┘    └───────────┘    └──────────┘
+    │            │             │                 │
+    └────────────┴─────────────┴─────────────────┘
+                        │
+                        ▼
+                  ┌───────────┐
+                  │ CANCELLED │
+                  └───────────┘
+```
+
+1. **Create PO**: Select supplier, add items with quantities
+2. **Send to Supplier**: Mark as sent for processing
+3. **Supplier Confirms**: Mark as confirmed when acknowledged
+4. **Receive Goods**: Select warehouse, stock is automatically added
+
+### Sales Order Workflow
+
+```
+┌───────┐    ┌─────────┐    ┌───────────┐    ┌─────────┐    ┌───────────┐
+│ DRAFT │───▶│ PENDING │───▶│ CONFIRMED │───▶│ SHIPPED │───▶│ DELIVERED │
+└───────┘    └─────────┘    └───────────┘    └─────────┘    └───────────┘
+    │             │               │               │
+    └─────────────┴───────────────┴───────────────┘
+                           │
+                           ▼
+                     ┌───────────┐
+                     │ CANCELLED │
+                     └───────────┘
+```
+
+1. **Create SO**: Select customer, add items with pricing
+2. **Submit Order**: Move to pending for review
+3. **Confirm Order**: Approve the order
+4. **Ship Order**: Select warehouse, stock is automatically reduced
+5. **Mark Delivered**: Complete the order
 
 ---
 
@@ -259,13 +369,21 @@ import { ThemeProvider, useTheme } from "@repo/ui/theme-provider";
 Prisma client and type constants:
 
 ```tsx
-import { prisma, LocationType, MovementType, UserRole } from "@repo/database";
+import { 
+  prisma, 
+  LocationType, 
+  MovementType, 
+  UserRole,
+  POStatus,
+  OrderStatus 
+} from "@repo/database";
 
-// Use type constants (SQLite doesn't support enums)
-const zone = await prisma.location.create({
+// Example: Create a purchase order
+const po = await prisma.purchaseOrder.create({
   data: {
-    type: LocationType.ZONE,  // "ZONE"
-    // ...
+    orderNumber: "PO-00001",
+    supplierId: supplier.id,
+    status: POStatus.DRAFT,
   }
 });
 ```
@@ -286,7 +404,6 @@ TradeSphere supports Dark and Light modes with cross-app synchronization.
 ### Usage
 
 ```tsx
-// In any component within web app
 import { useTheme } from "@repo/ui/theme-provider";
 
 function MyComponent() {
@@ -322,8 +439,8 @@ The inventory module exposes REST APIs for dynamic data:
 | Role | Access Level |
 |------|--------------|
 | **ADMIN** | Full system access + User management |
-| **MANAGER** | Inventory, Analytics, Reports |
-| **OPERATOR** | Stock movements, Product updates |
+| **MANAGER** | Inventory, Analytics, Reports, Orders |
+| **OPERATOR** | Stock movements, Product updates, Order processing |
 | **VIEWER** | Read-only dashboards and reports |
 
 ---
@@ -337,6 +454,25 @@ The inventory module exposes REST APIs for dynamic data:
 | `pnpm lint` | Run ESLint across all packages |
 | `pnpm check-types` | TypeScript type checking |
 | `pnpm --filter @repo/database db:studio` | Open Prisma Studio |
+| `pnpm --filter @repo/database db:generate` | Regenerate Prisma client |
+| `pnpm --filter @repo/database db:push` | Push schema to database |
+
+---
+
+## Module Overview
+
+| Module | Path | Features |
+|--------|------|----------|
+| **Dashboard** | `/` | Overview, quick stats, activity |
+| **Products** | `/inventory` | Product catalog CRUD |
+| **Warehouses** | `/inventory/warehouses` | Facility management |
+| **Locations** | `/inventory/locations` | Hierarchical storage |
+| **Stock** | `/inventory/stock` | Stock in/out/transfer |
+| **Suppliers** | `/inventory/suppliers` | Vendor management |
+| **Purchase Orders** | `/inventory/purchase-orders` | Procurement workflow |
+| **Sales Orders** | `/inventory/sales-orders` | Order fulfillment |
+| **Analytics** | `/analytics` | Reports and insights |
+| **Settings** | `/settings` | User and system config |
 
 ---
 

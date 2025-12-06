@@ -12,6 +12,8 @@ datasource db {
 // ============================================
 // LocationType: "ZONE" | "RACK" | "SHELF" | "BIN"
 // MovementType: "IN" | "OUT" | "TRANSFER"
+// OrderStatus: "DRAFT" | "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED"
+// POStatus: "DRAFT" | "SENT" | "CONFIRMED" | "PARTIAL" | "RECEIVED" | "CANCELLED"
 
 // ============================================
 // CORE MODELS
@@ -36,8 +38,11 @@ model Product {
   updatedAt    DateTime @updatedAt
 
   // Relations
-  stockItems     StockItem[]
-  stockMovements StockMovement[]
+  stockItems       StockItem[]
+  stockMovements   StockMovement[]
+  purchaseItems    PurchaseOrderItem[]
+  salesItems       SalesOrderItem[]
+  supplierProducts SupplierProduct[]
 
   @@map("products")
 }
@@ -164,8 +169,212 @@ model User {
   lastLoginAt DateTime?
 
   // Relations
-  stockMovements StockMovement[]
+  stockMovements  StockMovement[]
+  purchaseOrders  PurchaseOrder[]
+  salesOrders     SalesOrder[]
 
   @@map("users")
+}
+
+// ============================================
+// SUPPLIER MANAGEMENT
+// ============================================
+
+model Supplier {
+  id           String   @id @default(cuid())
+  name         String
+  code         String   @unique // e.g., "SUP-001"
+  email        String?
+  phone        String?
+  address      String?
+  contactName  String?
+  website      String?
+  notes        String?
+  isActive     Boolean  @default(true)
+  
+  // Payment terms
+  paymentTerms String?  // e.g., "Net 30", "Net 60"
+  leadTimeDays Int?     // Average lead time in days
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  products       SupplierProduct[]
+  purchaseOrders PurchaseOrder[]
+
+  @@map("suppliers")
+}
+
+model SupplierProduct {
+  id            String   @id @default(cuid())
+  supplierSku   String?  // Supplier's SKU for this product
+  unitCost      Decimal  // Cost from this supplier
+  minOrderQty   Int      @default(1)
+  leadTimeDays  Int?     // Lead time for this specific product
+  isPreferred   Boolean  @default(false) // Preferred supplier for this product
+  
+  // Relations
+  supplierId    String
+  supplier      Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([supplierId, productId])
+  @@map("supplier_products")
+}
+
+// ============================================
+// PURCHASE ORDERS
+// ============================================
+// POStatus: "DRAFT" | "SENT" | "CONFIRMED" | "PARTIAL" | "RECEIVED" | "CANCELLED"
+
+model PurchaseOrder {
+  id              String   @id @default(cuid())
+  orderNumber     String   @unique // e.g., "PO-2024-001"
+  status          String   @default("DRAFT")
+  
+  // Dates
+  orderDate       DateTime @default(now())
+  expectedDate    DateTime? // Expected delivery date
+  receivedDate    DateTime? // Actual received date
+  
+  // Financial
+  subtotal        Decimal  @default(0)
+  tax             Decimal  @default(0)
+  shipping        Decimal  @default(0)
+  total           Decimal  @default(0)
+  
+  notes           String?
+  
+  // Relations
+  supplierId      String
+  supplier        Supplier @relation(fields: [supplierId], references: [id])
+  
+  createdById     String?
+  createdBy       User?    @relation(fields: [createdById], references: [id])
+  
+  // Delivery location
+  warehouseId     String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Line items
+  items           PurchaseOrderItem[]
+
+  @@map("purchase_orders")
+}
+
+model PurchaseOrderItem {
+  id              String   @id @default(cuid())
+  quantity        Int
+  unitCost        Decimal
+  receivedQty     Int      @default(0) // Quantity actually received
+  
+  // Relations
+  purchaseOrderId String
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("purchase_order_items")
+}
+
+// ============================================
+// CUSTOMERS & SALES ORDERS
+// ============================================
+
+model Customer {
+  id           String   @id @default(cuid())
+  name         String
+  code         String   @unique // e.g., "CUST-001"
+  email        String?
+  phone        String?
+  address      String?
+  contactName  String?
+  company      String?
+  notes        String?
+  isActive     Boolean  @default(true)
+  
+  // Credit terms
+  creditLimit  Decimal? 
+  paymentTerms String?  // e.g., "Net 30"
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  salesOrders  SalesOrder[]
+
+  @@map("customers")
+}
+
+// OrderStatus: "DRAFT" | "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED"
+
+model SalesOrder {
+  id              String   @id @default(cuid())
+  orderNumber     String   @unique // e.g., "SO-2024-001"
+  status          String   @default("DRAFT")
+  
+  // Dates
+  orderDate       DateTime @default(now())
+  shippedDate     DateTime?
+  deliveredDate   DateTime?
+  
+  // Financial
+  subtotal        Decimal  @default(0)
+  tax             Decimal  @default(0)
+  shipping        Decimal  @default(0)
+  discount        Decimal  @default(0)
+  total           Decimal  @default(0)
+  
+  // Shipping info
+  shippingAddress String?
+  trackingNumber  String?
+  
+  notes           String?
+  
+  // Relations
+  customerId      String?
+  customer        Customer? @relation(fields: [customerId], references: [id])
+  
+  createdById     String?
+  createdBy       User?    @relation(fields: [createdById], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Line items
+  items           SalesOrderItem[]
+
+  @@map("sales_orders")
+}
+
+model SalesOrderItem {
+  id              String   @id @default(cuid())
+  quantity        Int
+  unitPrice       Decimal
+  shippedQty      Int      @default(0) // Quantity actually shipped
+  
+  // Relations
+  salesOrderId    String
+  salesOrder      SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Cascade)
+  
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("sales_order_items")
 }
 
