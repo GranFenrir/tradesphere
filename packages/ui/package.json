@@ -5,10 +5,13 @@
   "exports": {
     "./*": "./src/*.tsx",
     "./utils": "./src/utils.ts",
+    "./button": "./src/button.tsx",
     "./card": "./src/card.tsx",
+    "./code": "./src/code.tsx",
+    "./sidebar": "./src/sidebar.tsx",
     "./table": "./src/table.tsx",
     "./data-table": "./src/data-table.tsx",
-    "./theme-sync": "./src/theme-sync.tsx"
+    "./theme-provider": "./src/theme-provider.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -23,7 +26,7 @@
     "@types/react-dom": "19.2.2",
     "autoprefixer": "^10.4.22",
     "eslint": "^9.39.1",
-    "next": "^14.0.0",
+    "next": "^16.0.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.18",
     "typescript": "5.9.2"

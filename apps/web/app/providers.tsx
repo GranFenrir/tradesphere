@@ -1,28 +1,10 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { ThemeProvider, useTheme, type Theme } from '@repo/ui/theme-provider';
 
-// ============================================
-// THEME CONTEXT
-// ============================================
-
-type Theme = 'dark' | 'light';
-
-interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-}
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  // Return default values if not within provider (SSR safety)
-  if (!context) {
-    return { theme: 'dark' as Theme, setTheme: () => {} };
-  }
-  return context;
-}
+// Re-export theme hooks from shared package
+export { useTheme, type Theme } from '@repo/ui/theme-provider';
 
 // ============================================
 // USER CONTEXT
@@ -53,29 +35,16 @@ export function useUser() {
 }
 
 // ============================================
-// COMBINED PROVIDER
+// USER PROVIDER (internal)
 // ============================================
 
-interface ProvidersProps {
-  children: ReactNode;
-  initialTheme?: Theme;
-  initialUser?: User | null;
-}
-
-export function Providers({ children, initialTheme = 'dark', initialUser = null }: ProvidersProps) {
-  const [theme, setThemeState] = useState<Theme>(initialTheme);
-  const [user, setUser] = useState<User | null>(initialUser);
+function UserProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Apply theme on mount and changes
+  // Load user from localStorage on mount
   useEffect(() => {
     setMounted(true);
-    // Check localStorage for saved theme
-    const savedTheme = localStorage.getItem('tradesphere-theme') as Theme | null;
-    if (savedTheme) {
-      setThemeState(savedTheme);
-    }
-    // Check localStorage for saved user
     const savedUser = localStorage.getItem('tradesphere-current-user');
     if (savedUser) {
       try {
@@ -86,26 +55,6 @@ export function Providers({ children, initialTheme = 'dark', initialUser = null 
     }
   }, []);
 
-  useEffect(() => {
-    if (!mounted) return;
-    
-    // Apply theme class to html element
-    const html = document.documentElement;
-    if (theme === 'light') {
-      html.classList.add('light');
-      html.classList.remove('dark');
-    } else {
-      html.classList.add('dark');
-      html.classList.remove('light');
-    }
-    // Save to localStorage
-    localStorage.setItem('tradesphere-theme', theme);
-  }, [theme, mounted]);
-
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-  };
-
   const setUserAndPersist = (newUser: User | null) => {
     setUser(newUser);
     if (newUser) {
@@ -115,16 +64,35 @@ export function Providers({ children, initialTheme = 'dark', initialUser = null 
     }
   };
 
-  // Prevent hydration mismatch
   if (!mounted) {
     return <>{children}</>;
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      <UserContext.Provider value={{ user, setUser: setUserAndPersist }}>
+    <UserContext.Provider value={{ user, setUser: setUserAndPersist }}>
+      {children}
+    </UserContext.Provider>
+  );
+}
+
+// ============================================
+// COMBINED PROVIDER
+// ============================================
+
+interface ProvidersProps {
+  children: ReactNode;
+}
+
+/**
+ * Root provider that combines ThemeProvider (from shared UI) and UserProvider.
+ * Use this in the web app's layout.tsx.
+ */
+export function Providers({ children }: ProvidersProps) {
+  return (
+    <ThemeProvider defaultTheme="dark">
+      <UserProvider>
         {children}
-      </UserContext.Provider>
-    </ThemeContext.Provider>
+      </UserProvider>
+    </ThemeProvider>
   );
 }
