@@ -9,7 +9,9 @@ import {
   Layers, 
   Grid3X3, 
   Box,
-  ArrowLeft
+  ArrowLeft,
+  ExternalLink,
+  ChevronDown
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -36,7 +38,7 @@ interface LocationFromDB {
   type: string;
   capacity: number | null;
   parentId: string | null;
-  stockItems: { quantity: number; product: { name: string; sku: string } }[];
+  stockItems: { quantity: number; productId: string; product: { name: string; sku: string } }[];
 }
 
 interface LocationWithChildren extends LocationFromDB {
@@ -63,35 +65,61 @@ function LocationTreeNode({ location, depth = 0 }: { location: LocationWithChild
   return (
     <div className="space-y-2">
       <div
-        className={`flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border hover:border-primary/30 transition-colors`}
+        className={`rounded-lg bg-muted/50 border border-border hover:border-primary/30 transition-colors`}
         style={{ marginLeft: `${depth * 24}px` }}
       >
-        <div className={`p-2 rounded-lg border ${colorClass}`}>
-          <Icon className="w-4 h-4" />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <span className="font-medium text-foreground">{location.name}</span>
-            <span className="text-xs font-mono text-muted-foreground px-2 py-0.5 bg-muted/50 rounded">
-              {location.code}
-            </span>
-            <span className={`text-xs px-2 py-0.5 rounded border ${colorClass}`}>
-              {location.type}
-            </span>
+        <div className="flex items-center gap-3 p-3">
+          <div className={`p-2 rounded-lg border ${colorClass}`}>
+            <Icon className="w-4 h-4" />
           </div>
-          {location.stockItems.length > 0 && (
-            <div className="mt-1 text-xs text-muted-foreground">
-              {totalStock} units • {location.stockItems.length} product(s)
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-foreground">{location.name}</span>
+              <span className="text-xs font-mono text-muted-foreground px-2 py-0.5 bg-muted/50 rounded">
+                {location.code}
+              </span>
+              <span className={`text-xs px-2 py-0.5 rounded border ${colorClass}`}>
+                {location.type}
+              </span>
+            </div>
+            {location.stockItems.length > 0 && (
+              <div className="mt-1 text-xs text-muted-foreground">
+                {totalStock} units • {location.stockItems.length} product(s)
+              </div>
+            )}
+          </div>
+          {location.capacity && (
+            <div className="text-sm text-muted-foreground">
+              Cap: {location.capacity}
             </div>
           )}
+          {location.children.length > 0 && (
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+          )}
         </div>
-        {location.capacity && (
-          <div className="text-sm text-muted-foreground">
-            Cap: {location.capacity}
+        
+        {/* Stock Items in this location */}
+        {location.stockItems.length > 0 && (
+          <div className="px-3 pb-3 pt-1 border-t border-border/50">
+            <div className="flex flex-wrap gap-2">
+              {location.stockItems.map((item) => (
+                <Link
+                  key={item.productId}
+                  href={`/products/${item.product.sku}/edit`}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-background/50 hover:bg-primary/10 border border-border hover:border-primary/30 rounded-lg text-sm transition-colors group"
+                >
+                  <Package className="w-3 h-3 text-muted-foreground group-hover:text-primary" />
+                  <span className="text-foreground group-hover:text-primary font-medium">
+                    {item.product.name}
+                  </span>
+                  <span className="text-muted-foreground text-xs">
+                    ({item.quantity} units)
+                  </span>
+                  <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+              ))}
+            </div>
           </div>
-        )}
-        {location.children.length > 0 && (
-          <ChevronRight className="w-4 h-4 text-muted-foreground" />
         )}
       </div>
       {location.children.length > 0 && (
@@ -143,6 +171,44 @@ export default async function WarehouseDetailPage({
   const uniqueProducts = new Set(
     warehouse.locations.flatMap((loc) => loc.stockItems.map((item) => item.productId))
   ).size;
+
+  // Aggregate all stock items for the summary table
+  const stockSummary = warehouse.locations
+    .flatMap((loc) => 
+      loc.stockItems.map((item) => ({
+        ...item,
+        locationName: loc.name,
+        locationCode: loc.code,
+        locationType: loc.type,
+      }))
+    )
+    .reduce((acc, item) => {
+      const existing = acc.find((a) => a.productId === item.productId);
+      if (existing) {
+        existing.totalQuantity += item.quantity;
+        existing.locations.push({
+          name: item.locationName,
+          code: item.locationCode,
+          type: item.locationType,
+          quantity: item.quantity,
+        });
+      } else {
+        acc.push({
+          productId: item.productId,
+          productName: item.product.name,
+          productSku: item.product.sku,
+          totalQuantity: item.quantity,
+          locations: [{
+            name: item.locationName,
+            code: item.locationCode,
+            type: item.locationType,
+            quantity: item.quantity,
+          }],
+        });
+      }
+      return acc;
+    }, [] as { productId: string; productName: string; productSku: string; totalQuantity: number; locations: { name: string; code: string; type: string; quantity: number }[] }[])
+    .sort((a, b) => b.totalQuantity - a.totalQuantity);
 
   const zoneCount = warehouse.locations.filter((l) => l.type === "ZONE").length;
   const binCount = warehouse.locations.filter((l) => l.type === "BIN").length;
@@ -275,6 +341,73 @@ export default async function WarehouseDetailPage({
           )}
         </CardContent>
       </Card>
+
+      {/* Stock Inventory Summary */}
+      {stockSummary.length > 0 && (
+        <Card className="glass-card border-border">
+          <CardHeader>
+            <CardTitle className="text-foreground">Stock Inventory</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              All products stored in this warehouse
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Product</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">SKU</th>
+                    <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Total Qty</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Locations</th>
+                    <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stockSummary.map((item) => (
+                    <tr key={item.productId} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                      <td className="py-3 px-4">
+                        <span className="font-medium text-foreground">{item.productName}</span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="font-mono text-sm text-muted-foreground">{item.productSku}</span>
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <span className="font-bold text-foreground">{item.totalQuantity.toLocaleString()}</span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex flex-wrap gap-1">
+                          {item.locations.map((loc, idx) => {
+                            const locColor = typeColors[loc.type as keyof typeof typeColors] || typeColors.BIN;
+                            return (
+                              <span
+                                key={idx}
+                                className={`text-xs px-2 py-0.5 rounded border ${locColor}`}
+                                title={`${loc.name}: ${loc.quantity} units`}
+                              >
+                                {loc.code} ({loc.quantity})
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <Link
+                          href={`/products/${item.productSku}/edit`}
+                          className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
+                        >
+                          View Product
+                          <ExternalLink className="w-3 h-3" />
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
