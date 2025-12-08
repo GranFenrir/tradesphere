@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -24,6 +25,9 @@ const UserRole = {
 } as const;
 
 async function main() {
+  // Hash the default password for demo users
+  const defaultPassword = await bcrypt.hash('admin123', 12);
+  
   // ============================================
   // USERS
   // ============================================
@@ -31,6 +35,7 @@ async function main() {
     {
       email: 'admin@tradesphere.com',
       name: 'System Admin',
+      password: defaultPassword,
       role: UserRole.ADMIN,
       isActive: true,
       preferences: JSON.stringify({ theme: 'dark', notifications: { email: true, push: true } }),
@@ -38,6 +43,7 @@ async function main() {
     {
       email: 'emre.demir@tradesphere.com',
       name: 'Emre Demir',
+      password: defaultPassword,
       role: UserRole.MANAGER,
       isActive: true,
       preferences: JSON.stringify({ theme: 'dark', notifications: { email: true, push: false } }),
@@ -45,6 +51,7 @@ async function main() {
     {
       email: 'operator@tradesphere.com',
       name: 'Warehouse Operator',
+      password: defaultPassword,
       role: UserRole.OPERATOR,
       isActive: true,
       preferences: JSON.stringify({ theme: 'dark', notifications: { email: false, push: true } }),

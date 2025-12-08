@@ -1,10 +1,20 @@
 'use server'
 
-import { prisma, Prisma, LocationType, MovementType } from "@repo/database";
+import { prisma, Prisma, LocationType, MovementType, Actions, AuthorizationError } from "@repo/database";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requirePermission } from "./lib/auth";
 
 export async function createProduct(formData: FormData): Promise<{ error?: string }> {
+  try {
+    await requirePermission(Actions.CREATE_PRODUCT);
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: error.message };
+    }
+    return { error: "Authentication required" };
+  }
+
   const name = formData.get("name") as string;
   const sku = formData.get("sku") as string;
   const category = formData.get("category") as string;
@@ -40,7 +50,16 @@ export async function createProduct(formData: FormData): Promise<{ error?: strin
   redirect("/");
 }
 
-export async function deleteProduct(sku: string) {
+export async function deleteProduct(sku: string): Promise<{ error?: string } | void> {
+  try {
+    await requirePermission(Actions.DELETE_PRODUCT);
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: error.message };
+    }
+    return { error: "Authentication required" };
+  }
+
   await prisma.product.delete({
     where: { sku },
   });
@@ -48,7 +67,16 @@ export async function deleteProduct(sku: string) {
   revalidatePath("/");
 }
 
-export async function adjustStock(sku: string, adjustment: number) {
+export async function adjustStock(sku: string, adjustment: number): Promise<{ error?: string } | void> {
+  try {
+    await requirePermission(adjustment > 0 ? Actions.STOCK_IN : Actions.STOCK_OUT);
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: error.message };
+    }
+    return { error: "Authentication required" };
+  }
+
   const product = await prisma.product.findUnique({ where: { sku } });
   if (!product) return;
 
@@ -62,7 +90,16 @@ export async function adjustStock(sku: string, adjustment: number) {
   revalidatePath("/");
 }
 
-export async function updateProduct(formData: FormData) {
+export async function updateProduct(formData: FormData): Promise<{ error?: string } | void> {
+  try {
+    await requirePermission(Actions.UPDATE_PRODUCT);
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: error.message };
+    }
+    return { error: "Authentication required" };
+  }
+
   const sku = formData.get("sku") as string;
   const name = formData.get("name") as string;
   const category = formData.get("category") as string;
@@ -94,6 +131,15 @@ export async function updateProduct(formData: FormData) {
 // ============================================
 
 export async function createWarehouse(formData: FormData): Promise<{ error?: string }> {
+  try {
+    await requirePermission(Actions.MANAGE_WAREHOUSE);
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: error.message };
+    }
+    return { error: "Authentication required" };
+  }
+
   const name = formData.get("name") as string;
   const code = formData.get("code") as string;
   const address = formData.get("address") as string | null;
@@ -123,6 +169,15 @@ export async function createWarehouse(formData: FormData): Promise<{ error?: str
 }
 
 export async function updateWarehouse(formData: FormData): Promise<{ error?: string }> {
+  try {
+    await requirePermission(Actions.MANAGE_WAREHOUSE);
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: error.message };
+    }
+    return { error: "Authentication required" };
+  }
+
   const id = formData.get("id") as string;
   const name = formData.get("name") as string;
   const address = formData.get("address") as string | null;
@@ -150,6 +205,15 @@ export async function updateWarehouse(formData: FormData): Promise<{ error?: str
 
 export async function deleteWarehouse(id: string): Promise<{ error?: string } | undefined> {
   try {
+    await requirePermission(Actions.MANAGE_WAREHOUSE);
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: error.message };
+    }
+    return { error: "Authentication required" };
+  }
+
+  try {
     // Check if warehouse has any stock items
     const stockCount = await prisma.stockItem.count({
       where: { location: { warehouseId: id } },
@@ -173,6 +237,14 @@ export async function deleteWarehouse(id: string): Promise<{ error?: string } | 
 // ============================================
 
 export async function createLocation(formData: FormData): Promise<{ error?: string }> {
+  try {
+    await requirePermission(Actions.MANAGE_LOCATION);
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: error.message };
+    }
+    return { error: "Authentication required" };
+  }
   const name = formData.get("name") as string;
   const code = formData.get("code") as string;
   const type = formData.get("type") as LocationType;
@@ -208,6 +280,15 @@ export async function createLocation(formData: FormData): Promise<{ error?: stri
 
 export async function deleteLocation(id: string): Promise<{ error?: string } | undefined> {
   try {
+    await requirePermission(Actions.MANAGE_LOCATION);
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: error.message };
+    }
+    return { error: "Authentication required" };
+  }
+
+  try {
     // Check if location has stock
     const stockCount = await prisma.stockItem.count({
       where: { locationId: id },
@@ -242,6 +323,23 @@ export async function deleteLocation(id: string): Promise<{ error?: string } | u
 
 export async function createMovement(formData: FormData): Promise<{ error?: string }> {
   const type = formData.get("type") as MovementType;
+  
+  // Check permission based on movement type
+  try {
+    if (type === MovementType.IN) {
+      await requirePermission(Actions.STOCK_IN);
+    } else if (type === MovementType.OUT) {
+      await requirePermission(Actions.STOCK_OUT);
+    } else if (type === MovementType.TRANSFER) {
+      await requirePermission(Actions.STOCK_TRANSFER);
+    }
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: error.message };
+    }
+    return { error: "Authentication required" };
+  }
+
   const productId = formData.get("productId") as string;
   const quantity = parseInt(formData.get("quantity") as string);
   const fromLocationId = formData.get("fromLocationId") as string | null;

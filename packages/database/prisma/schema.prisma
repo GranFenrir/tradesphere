@@ -14,6 +14,16 @@ datasource db {
 // MovementType: "IN" | "OUT" | "TRANSFER"
 // OrderStatus: "DRAFT" | "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED"
 // POStatus: "DRAFT" | "SENT" | "CONFIRMED" | "PARTIAL" | "RECEIVED" | "CANCELLED"
+// InvoiceStatus: "DRAFT" | "SENT" | "PAID" | "PARTIAL" | "OVERDUE" | "CANCELLED" | "REFUNDED"
+// InvoiceType: "SALES" | "PURCHASE" | "CREDIT_NOTE" | "DEBIT_NOTE"
+// PaymentMethod: "CASH" | "BANK_TRANSFER" | "CREDIT_CARD" | "CHECK" | "OTHER"
+// QualityStatus: "PENDING" | "APPROVED" | "REJECTED" | "QUARANTINE"
+// SerialStatus: "IN_STOCK" | "SOLD" | "RETURNED" | "DEFECTIVE" | "RESERVED"
+// LeadStatus: "NEW" | "CONTACTED" | "QUALIFIED" | "UNQUALIFIED" | "CONVERTED"
+// LeadSource: "WEBSITE" | "REFERRAL" | "COLD_CALL" | "TRADE_SHOW" | "SOCIAL_MEDIA" | "OTHER"
+// LeadRating: "HOT" | "WARM" | "COLD"
+// OpportunityStage: "PROSPECTING" | "QUALIFICATION" | "PROPOSAL" | "NEGOTIATION" | "CLOSED_WON" | "CLOSED_LOST"
+// ActivityType: "CALL" | "EMAIL" | "MEETING" | "TASK" | "NOTE"
 
 // ============================================
 // CORE MODELS
@@ -43,6 +53,9 @@ model Product {
   purchaseItems    PurchaseOrderItem[]
   salesItems       SalesOrderItem[]
   supplierProducts SupplierProduct[]
+  invoiceItems     InvoiceItem[]
+  batches          Batch[]
+  serialNumbers    SerialNumber[]
 
   @@map("products")
 }
@@ -91,6 +104,10 @@ model Location {
   stockItems          StockItem[]
   outgoingMovements   StockMovement[] @relation("FromLocation")
   incomingMovements   StockMovement[] @relation("ToLocation")
+  batches             Batch[]
+  serialNumbers       SerialNumber[]
+  batchOutgoing       BatchMovement[] @relation("BatchFromLocation")
+  batchIncoming       BatchMovement[] @relation("BatchToLocation")
 
   @@unique([warehouseId, code])
   @@map("locations")
@@ -156,10 +173,12 @@ model StockMovement {
 model User {
   id          String   @id @default(cuid())
   email       String   @unique
+  password    String?  // Hashed password for credentials auth
   name        String
   avatar      String?  // URL to avatar image
   role        String   @default("OPERATOR") // "ADMIN" | "MANAGER" | "OPERATOR" | "VIEWER"
   isActive    Boolean  @default(true)
+  emailVerified DateTime? // For email verification
   
   // Preferences (stored as JSON string for SQLite)
   preferences String?  // JSON: { theme, notifications, language, timezone }
@@ -169,9 +188,20 @@ model User {
   lastLoginAt DateTime?
 
   // Relations
-  stockMovements  StockMovement[]
-  purchaseOrders  PurchaseOrder[]
-  salesOrders     SalesOrder[]
+  stockMovements    StockMovement[]
+  purchaseOrders    PurchaseOrder[]
+  salesOrders       SalesOrder[]
+  invoices          Invoice[]
+  payments          Payment[]
+  batchMovements    BatchMovement[]
+  leadsAssigned     Lead[] @relation("LeadAssignment")
+  opportunitiesAssigned Opportunity[] @relation("OpportunityAssignment")
+  activitiesAssigned Activity[] @relation("ActivityAssignment")
+  activitiesCreated  Activity[] @relation("ActivityCreator")
+  
+  // NextAuth relations
+  accounts          Account[]
+  sessions          Session[]
 
   @@map("users")
 }
@@ -202,6 +232,8 @@ model Supplier {
   // Relations
   products       SupplierProduct[]
   purchaseOrders PurchaseOrder[]
+  invoices       Invoice[]
+  batches        Batch[]
 
   @@map("suppliers")
 }
@@ -313,7 +345,12 @@ model Customer {
   updatedAt    DateTime @updatedAt
 
   // Relations
-  salesOrders  SalesOrder[]
+  salesOrders       SalesOrder[]
+  invoices          Invoice[]
+  serialNumbers     SerialNumber[]
+  opportunities     Opportunity[]
+  activities        Activity[]
+  convertedFromLead Lead? @relation("LeadConversion")
 
   @@map("customers")
 }
@@ -376,5 +413,376 @@ model SalesOrderItem {
   updatedAt       DateTime @updatedAt
 
   @@map("sales_order_items")
+}
+
+// ============================================
+// INVOICING & PAYMENTS
+// ============================================
+// InvoiceStatus: "DRAFT" | "SENT" | "PAID" | "PARTIAL" | "OVERDUE" | "CANCELLED" | "REFUNDED"
+// InvoiceType: "SALES" | "PURCHASE" | "CREDIT_NOTE" | "DEBIT_NOTE"
+// PaymentMethod: "CASH" | "BANK_TRANSFER" | "CREDIT_CARD" | "CHECK" | "OTHER"
+
+model Invoice {
+  id              String   @id @default(cuid())
+  invoiceNumber   String   @unique // e.g., "INV-2024-001"
+  type            String   @default("SALES") // "SALES" | "PURCHASE" | "CREDIT_NOTE" | "DEBIT_NOTE"
+  status          String   @default("DRAFT")
+  
+  // Dates
+  invoiceDate     DateTime @default(now())
+  dueDate         DateTime
+  paidDate        DateTime?
+  
+  // Financial
+  subtotal        Decimal  @default(0)
+  taxRate         Decimal  @default(0) // Tax percentage (e.g., 18 for 18%)
+  taxAmount       Decimal  @default(0)
+  discount        Decimal  @default(0)
+  total           Decimal  @default(0)
+  amountPaid      Decimal  @default(0)
+  amountDue       Decimal  @default(0)
+  
+  // Currency
+  currency        String   @default("USD")
+  exchangeRate    Decimal  @default(1)
+  
+  notes           String?
+  terms           String?  // Payment terms text
+  
+  // Relations - can be linked to customer OR supplier
+  customerId      String?
+  customer        Customer? @relation(fields: [customerId], references: [id])
+  
+  supplierId      String?
+  supplier        Supplier? @relation(fields: [supplierId], references: [id])
+  
+  // Link to source order
+  salesOrderId    String?
+  purchaseOrderId String?
+  
+  createdById     String?
+  createdBy       User?    @relation(fields: [createdById], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  items           InvoiceItem[]
+  payments        Payment[]
+
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id              String   @id @default(cuid())
+  description     String
+  quantity        Int
+  unitPrice       Decimal
+  taxRate         Decimal  @default(0)
+  taxAmount       Decimal  @default(0)
+  total           Decimal
+  
+  // Optional product reference
+  productId       String?
+  product         Product? @relation(fields: [productId], references: [id])
+  
+  // Relations
+  invoiceId       String
+  invoice         Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("invoice_items")
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  paymentNumber   String   @unique // e.g., "PAY-2024-001"
+  amount          Decimal
+  method          String   @default("BANK_TRANSFER") // "CASH" | "BANK_TRANSFER" | "CREDIT_CARD" | "CHECK" | "OTHER"
+  
+  paymentDate     DateTime @default(now())
+  reference       String?  // Check number, transaction ID, etc.
+  notes           String?
+  
+  // Relations
+  invoiceId       String
+  invoice         Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  
+  recordedById    String?
+  recordedBy      User?    @relation(fields: [recordedById], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("payments")
+}
+
+// ============================================
+// BATCH / LOT / SERIAL TRACKING
+// ============================================
+
+model Batch {
+  id              String   @id @default(cuid())
+  batchNumber     String   // e.g., "LOT-2024-001"
+  
+  // Dates
+  manufactureDate DateTime?
+  expiryDate      DateTime?
+  receivedDate    DateTime @default(now())
+  
+  // Quantity tracking
+  initialQty      Int
+  currentQty      Int
+  
+  // Source
+  supplierId      String?
+  supplier        Supplier? @relation(fields: [supplierId], references: [id])
+  purchaseOrderId String?
+  
+  // Quality
+  qualityStatus   String   @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED" | "QUARANTINE"
+  qualityNotes    String?
+  
+  notes           String?
+  
+  // Relations
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  locationId      String?
+  location        Location? @relation(fields: [locationId], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Serial numbers within this batch
+  serialNumbers   SerialNumber[]
+  batchMovements  BatchMovement[]
+
+  @@unique([productId, batchNumber])
+  @@map("batches")
+}
+
+model SerialNumber {
+  id              String   @id @default(cuid())
+  serialNumber    String   @unique
+  status          String   @default("IN_STOCK") // "IN_STOCK" | "SOLD" | "RETURNED" | "DEFECTIVE" | "RESERVED"
+  
+  // Warranty
+  warrantyExpiry  DateTime?
+  
+  notes           String?
+  
+  // Relations
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  batchId         String?
+  batch           Batch?   @relation(fields: [batchId], references: [id])
+  
+  locationId      String?
+  location        Location? @relation(fields: [locationId], references: [id])
+  
+  // Sales tracking
+  soldToCustomerId String?
+  soldToCustomer   Customer? @relation(fields: [soldToCustomerId], references: [id])
+  salesOrderId     String?
+  soldDate         DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("serial_numbers")
+}
+
+model BatchMovement {
+  id              String   @id @default(cuid())
+  type            String   // "IN" | "OUT" | "TRANSFER" | "ADJUSTMENT"
+  quantity        Int
+  reference       String?
+  notes           String?
+  
+  // Relations
+  batchId         String
+  batch           Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  
+  fromLocationId  String?
+  fromLocation    Location? @relation("BatchFromLocation", fields: [fromLocationId], references: [id])
+  
+  toLocationId    String?
+  toLocation      Location? @relation("BatchToLocation", fields: [toLocationId], references: [id])
+  
+  createdById     String?
+  createdBy       User?    @relation(fields: [createdById], references: [id])
+  
+  createdAt       DateTime @default(now())
+
+  @@map("batch_movements")
+}
+
+// ============================================
+// CRM - LEADS & OPPORTUNITIES
+// ============================================
+// LeadStatus: "NEW" | "CONTACTED" | "QUALIFIED" | "UNQUALIFIED" | "CONVERTED"
+// LeadSource: "WEBSITE" | "REFERRAL" | "COLD_CALL" | "TRADE_SHOW" | "SOCIAL_MEDIA" | "OTHER"
+// OpportunityStage: "PROSPECTING" | "QUALIFICATION" | "PROPOSAL" | "NEGOTIATION" | "CLOSED_WON" | "CLOSED_LOST"
+
+model Lead {
+  id              String   @id @default(cuid())
+  
+  // Contact info
+  firstName       String
+  lastName        String
+  email           String?
+  phone           String?
+  company         String?
+  jobTitle        String?
+  
+  // Lead details
+  status          String   @default("NEW")
+  source          String   @default("WEBSITE")
+  rating          String?  // "HOT" | "WARM" | "COLD"
+  
+  // Estimated value
+  estimatedValue  Decimal?
+  
+  notes           String?
+  
+  // Assignment
+  assignedToId    String?
+  assignedTo      User?    @relation("LeadAssignment", fields: [assignedToId], references: [id])
+  
+  // Conversion
+  convertedToCustomerId String? @unique
+  convertedToCustomer   Customer? @relation("LeadConversion", fields: [convertedToCustomerId], references: [id])
+  convertedDate   DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Activities
+  activities      Activity[]
+
+  @@map("leads")
+}
+
+model Opportunity {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  
+  // Pipeline
+  stage           String   @default("PROSPECTING")
+  probability     Int      @default(0) // 0-100%
+  
+  // Value
+  amount          Decimal
+  currency        String   @default("USD")
+  
+  // Dates
+  expectedCloseDate DateTime?
+  actualCloseDate   DateTime?
+  
+  // Relations
+  customerId      String?
+  customer        Customer? @relation(fields: [customerId], references: [id])
+  
+  assignedToId    String?
+  assignedTo      User?    @relation("OpportunityAssignment", fields: [assignedToId], references: [id])
+  
+  // If won, link to sales order
+  salesOrderId    String?
+  
+  notes           String?
+  lostReason      String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Activities
+  activities      Activity[]
+
+  @@map("opportunities")
+}
+
+model Activity {
+  id              String   @id @default(cuid())
+  type            String   // "CALL" | "EMAIL" | "MEETING" | "TASK" | "NOTE"
+  subject         String
+  description     String?
+  
+  // Scheduling
+  dueDate         DateTime?
+  completedDate   DateTime?
+  isCompleted     Boolean  @default(false)
+  
+  // Duration for calls/meetings (minutes)
+  duration        Int?
+  
+  // Relations - can be linked to Lead, Opportunity, or Customer
+  leadId          String?
+  lead            Lead?    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  opportunityId   String?
+  opportunity     Opportunity? @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  
+  customerId      String?
+  customer        Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  assignedToId    String?
+  assignedTo      User?    @relation("ActivityAssignment", fields: [assignedToId], references: [id])
+  
+  createdById     String?
+  createdBy       User?    @relation("ActivityCreator", fields: [createdById], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("activities")
+}
+
+// ============================================
+// AUTHENTICATION (NextAuth.js)
+// ============================================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }
 

@@ -1,11 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/card";
 import { Package, AlertTriangle, DollarSign, Search, Filter, Plus } from "lucide-react";
-import { prisma } from "@repo/database";
+import { prisma, Actions, canPerformAction } from "@repo/database";
 import Link from "next/link";
-import { DataTable } from "@repo/ui/data-table";
-import { columns } from "./columns";
+import { ProductTable } from "./product-table";
+import { getCurrentUser } from "./lib/auth";
 
 export default async function Page() {
+  const user = await getCurrentUser();
+  const canCreateProduct = canPerformAction(user?.role, Actions.CREATE_PRODUCT);
+  const canDeleteProduct = canPerformAction(user?.role, Actions.DELETE_PRODUCT);
+  const canUpdateProduct = canPerformAction(user?.role, Actions.UPDATE_PRODUCT);
+  const canAdjustStock = canPerformAction(user?.role, Actions.STOCK_IN);
+  
   const productsData = await prisma.product.findMany();
 
   const products = productsData.map((p) => {
@@ -45,12 +51,14 @@ export default async function Page() {
           <h1 className="text-3xl font-bold text-foreground neon-text">Inventory Management</h1>
           <p className="text-muted-foreground mt-2">Track and manage your global stock levels.</p>
         </div>
-        <Link href="/products/new">
-          <button className="bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-[0_0_15px_rgba(168,85,247,0.4)]">
-            <Plus className="w-4 h-4" />
-            Add Product
-          </button>
-        </Link>
+        {canCreateProduct && (
+          <Link href="/products/new">
+            <button className="bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+              <Plus className="w-4 h-4" />
+              Add Product
+            </button>
+          </Link>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -95,7 +103,14 @@ export default async function Page() {
           </div>
         </CardHeader>
         <CardContent>
-          <DataTable columns={columns} data={products} />
+          <ProductTable 
+            products={products} 
+            permissions={{
+              canEdit: canUpdateProduct,
+              canDelete: canDeleteProduct,
+              canAdjustStock: canAdjustStock,
+            }}
+          />
         </CardContent>
       </Card>
     </div>

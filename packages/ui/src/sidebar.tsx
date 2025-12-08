@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
     LayoutDashboard, 
@@ -20,12 +19,14 @@ import {
     PieChart,
     DollarSign,
     Users,
-    User,
-    Bell,
-    Palette,
     Truck,
     ShoppingCart,
     ClipboardList,
+    FileText,
+    QrCode,
+    Target,
+    UserPlus,
+    LogOut,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -65,9 +66,20 @@ const inventorySubNav: NavItem[] = [
             { name: "History", href: "/inventory/stock/movements", icon: History },
         ],
     },
+    { name: "Batches & Lots", href: "/inventory/batches", icon: QrCode },
     { name: "Suppliers", href: "/inventory/suppliers", icon: Truck },
     { name: "Purchase Orders", href: "/inventory/purchase-orders", icon: ClipboardList },
     { name: "Sales Orders", href: "/inventory/sales-orders", icon: ShoppingCart },
+    { name: "Invoices", href: "/inventory/invoices", icon: FileText },
+    { 
+        name: "CRM", 
+        href: "/inventory/crm/leads", 
+        icon: Users,
+        children: [
+            { name: "Leads", href: "/inventory/crm/leads", icon: UserPlus },
+            { name: "Opportunities", href: "/inventory/crm/opportunities", icon: Target },
+        ],
+    },
 ];
 
 // Sub-navigation for analytics module
@@ -75,31 +87,47 @@ const analyticsSubNav: NavItem[] = [
     { name: "Overview", href: "/analytics", icon: PieChart },
     { name: "Stock Health", href: "/analytics/stock-health", icon: TrendingUp },
     { name: "Financials", href: "/analytics/financials", icon: DollarSign },
+    { name: "Reports", href: "/analytics/reports", icon: FileText },
 ];
 
-// Sub-navigation for settings module
-const settingsSubNav: NavItem[] = [
-    { name: "Profile", href: "/settings", icon: User },
-    { name: "Users", href: "/settings/users", icon: Users },
-    { name: "Appearance", href: "/settings#appearance", icon: Palette },
-    { name: "Notifications", href: "/settings#notifications", icon: Bell },
-];
+// User interface for sidebar
+export interface SidebarUser {
+    name?: string | null;
+    email?: string | null;
+    role?: string;
+    image?: string | null;
+}
 
-export function Sidebar({ basePath = "" }: { basePath?: string }) {
+export interface SidebarProps {
+    basePath?: string;
+    user?: SidebarUser | null;
+    onLogout?: () => void;
+}
+
+export function Sidebar({ basePath = "", user, onLogout }: SidebarProps) {
     const pathname = usePathname();
     // Construct effective path to handle multi-zone basePaths
     const effectivePath = (basePath + (pathname === "/" ? "" : pathname)) || "/";
     
-    const [stockOpen, setStockOpen] = useState(effectivePath.includes("/stock"));
+    const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(() => ({
+        Stock: effectivePath.includes("/stock"),
+        CRM: effectivePath.includes("/crm"),
+    }));
+
+    const toggleSection = (name: string) => {
+        setExpandedSections(prev => ({
+            ...prev,
+            [name]: !prev[name],
+        }));
+    };
 
     // Determine which module we're in
     const isInInventory = effectivePath.startsWith("/inventory");
     const isInAnalytics = effectivePath.startsWith("/analytics");
-    const isInSettings = effectivePath.startsWith("/settings");
     
     // Get sub-navigation based on current module
-    const subNavigation = isInInventory ? inventorySubNav : isInAnalytics ? analyticsSubNav : isInSettings ? settingsSubNav : null;
-    const moduleLabel = isInInventory ? "Inventory Module" : isInAnalytics ? "Analytics Module" : isInSettings ? "Settings" : null;
+    const subNavigation = isInInventory ? inventorySubNav : isInAnalytics ? analyticsSubNav : null;
+    const moduleLabel = isInInventory ? "Inventory Module" : isInAnalytics ? "Analytics Module" : null;
 
     const isActive = (href: string) => {
         if (href === "/" || href === "/inventory" || href === "/analytics") {
@@ -164,7 +192,7 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
                                 return (
                                     <div key={item.name}>
                                         <button
-                                            onClick={() => setStockOpen(!stockOpen)}
+                                            onClick={() => toggleSection(item.name)}
                                             className={cn(
                                                 "w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition-all",
                                                 isParentActive
@@ -179,11 +207,11 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
                                             <ChevronDown
                                                 className={cn(
                                                     "w-4 h-4 transition-transform",
-                                                    stockOpen && "rotate-180"
+                                                    expandedSections[item.name] && "rotate-180"
                                                 )}
                                             />
                                         </button>
-                                        {stockOpen && (
+                                        {expandedSections[item.name] && (
                                             <div className="ml-4 mt-1 space-y-1 border-l border-border pl-3">
                                                 {item.children.map((child) => {
                                                     const isChildActive = isActive(child.href);
@@ -233,17 +261,45 @@ export function Sidebar({ basePath = "" }: { basePath?: string }) {
             {/* Spacer when no sub-nav */}
             {!subNavigation && <div className="flex-1" />}
 
-            <div className="p-4 border-t border-border">
-                <div className="glass-card p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold shadow-lg">
-                        ED
-                    </div>
-                    <div className="flex-1 overflow-hidden">
-                        <p className="text-sm font-medium text-foreground truncate">Emre Demir</p>
-                        <p className="text-xs text-muted-foreground truncate">Admin</p>
+            {user && (
+                <div className="p-4 border-t border-border">
+                    <div className="glass-card p-3 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold shadow-lg text-sm">
+                            {user.image ? (
+                                <img
+                                    src={user.image}
+                                    alt={user.name || "User"}
+                                    className="w-full h-full rounded-full object-cover"
+                                />
+                            ) : (
+                                user.name
+                                    ?.split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()
+                                    .slice(0, 2) || "U"
+                            )}
+                        </div>
+                        <div className="flex-1 overflow-hidden">
+                            <p className="text-sm font-medium text-foreground truncate">
+                                {user.name || "User"}
+                            </p>
+                            <p className="text-xs text-muted-foreground truncate">
+                                {user.role ? user.role.charAt(0) + user.role.slice(1).toLowerCase() : "User"}
+                            </p>
+                        </div>
+                        {onLogout && (
+                            <button
+                                onClick={onLogout}
+                                className="p-2 text-muted-foreground hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                title="Sign out"
+                            >
+                                <LogOut className="w-4 h-4" />
+                            </button>
+                        )}
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

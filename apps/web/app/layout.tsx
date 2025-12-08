@@ -1,7 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Sidebar } from "@repo/ui/sidebar";
 import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,10 +30,9 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={`${inter.className} flex min-h-screen bg-background`}>
+      <body className={`${inter.className} min-h-screen bg-background`}>
         <Providers>
-          <Sidebar />
-          <main className="flex-1 ml-64 p-8 bg-muted/20 min-h-screen">{children}</main>
+          {children}
         </Providers>
       </body>
     </html>
