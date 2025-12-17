@@ -18,7 +18,7 @@ export function ProductActions({ sku, canEdit = true, canDelete = true, canAdjus
   const [error, setError] = useState<string | null>(null)
 
   const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this product?")) {
+    if (confirm("Bu ürünü silmek istediğinizden emin misiniz?")) {
       startTransition(async () => {
         const result = await deleteProduct(sku)
         if (result?.error) {
@@ -49,7 +49,7 @@ export function ProductActions({ sku, canEdit = true, canDelete = true, canAdjus
             onClick={() => handleAdjust(-1)}
             disabled={isPending}
             className="h-8 w-8 text-muted-foreground hover:text-red-400 hover:bg-red-400/10"
-            title="Decrease stock"
+            title="Stok azalt"
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -59,7 +59,7 @@ export function ProductActions({ sku, canEdit = true, canDelete = true, canAdjus
             onClick={() => handleAdjust(1)}
             disabled={isPending}
             className="h-8 w-8 text-muted-foreground hover:text-green-400 hover:bg-green-400/10"
-            title="Increase stock"
+            title="Stok artır"
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -71,7 +71,7 @@ export function ProductActions({ sku, canEdit = true, canDelete = true, canAdjus
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10"
-            title="Edit product"
+            title="Ürünü düzenle"
           >
             <Edit className="h-4 w-4" />
           </Button>
@@ -84,7 +84,7 @@ export function ProductActions({ sku, canEdit = true, canDelete = true, canAdjus
           onClick={handleDelete}
           disabled={isPending}
           className="h-8 w-8 text-muted-foreground hover:text-red-400 hover:bg-red-400/10"
-          title="Delete product"
+          title="Ürünü sil"
         >
           <Trash2 className="h-4 w-4" />
         </Button>

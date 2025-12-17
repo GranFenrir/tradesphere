@@ -5,12 +5,12 @@ import { Plus, ClipboardList, Package, Clock, CheckCircle, XCircle, Truck } from
 import Link from "next/link";
 
 const statusConfig: Record<string, { label: string; color: string; icon: typeof Clock }> = {
-  [POStatus.DRAFT]: { label: "Draft", color: "bg-gray-500/20 text-gray-400 border-gray-500/30", icon: ClipboardList },
-  [POStatus.SENT]: { label: "Sent", color: "bg-blue-500/20 text-blue-400 border-blue-500/30", icon: Truck },
-  [POStatus.CONFIRMED]: { label: "Confirmed", color: "bg-purple-500/20 text-purple-400 border-purple-500/30", icon: CheckCircle },
-  [POStatus.PARTIAL]: { label: "Partial", color: "bg-orange-500/20 text-orange-400 border-orange-500/30", icon: Package },
-  [POStatus.RECEIVED]: { label: "Received", color: "bg-green-500/20 text-green-400 border-green-500/30", icon: CheckCircle },
-  [POStatus.CANCELLED]: { label: "Cancelled", color: "bg-red-500/20 text-red-400 border-red-500/30", icon: XCircle },
+  [POStatus.DRAFT]: { label: "Taslak", color: "bg-gray-500/20 text-gray-400 border-gray-500/30", icon: ClipboardList },
+  [POStatus.SENT]: { label: "Gönderildi", color: "bg-blue-500/20 text-blue-400 border-blue-500/30", icon: Truck },
+  [POStatus.CONFIRMED]: { label: "Onaylandı", color: "bg-purple-500/20 text-purple-400 border-purple-500/30", icon: CheckCircle },
+  [POStatus.PARTIAL]: { label: "Kısmi", color: "bg-orange-500/20 text-orange-400 border-orange-500/30", icon: Package },
+  [POStatus.RECEIVED]: { label: "Teslim Alındı", color: "bg-green-500/20 text-green-400 border-green-500/30", icon: CheckCircle },
+  [POStatus.CANCELLED]: { label: "İptal", color: "bg-red-500/20 text-red-400 border-red-500/30", icon: XCircle },
 } as const;
 
 export default async function PurchaseOrdersPage() {
@@ -42,15 +42,15 @@ export default async function PurchaseOrdersPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Purchase Orders</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Satın Alma Siparişleri</h1>
           <p className="text-muted-foreground mt-2">
-            Manage supplier orders and inventory replenishment.
+            Tedarikçi siparişlerini ve envanter yenilemeyi yönetin.
           </p>
         </div>
         <Link href="/purchase-orders/new">
           <Button className="shadow-[0_0_15px_rgba(168,85,247,0.4)]">
             <Plus className="w-4 h-4 mr-2" />
-            New Purchase Order
+            Yeni Satın Alma Siparişi
           </Button>
         </Link>
       </div>
@@ -60,7 +60,7 @@ export default async function PurchaseOrdersPage() {
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Orders
+              Toplam Sipariş
             </CardTitle>
             <ClipboardList className="h-4 w-4 text-primary" />
           </CardHeader>
@@ -72,7 +72,7 @@ export default async function PurchaseOrdersPage() {
         <Card className="glass-card border-yellow-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Draft
+              Taslak
             </CardTitle>
             <ClipboardList className="h-4 w-4 text-yellow-400" />
           </CardHeader>
@@ -84,7 +84,7 @@ export default async function PurchaseOrdersPage() {
         <Card className="glass-card border-blue-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Pending Delivery
+              Teslimat Bekliyor
             </CardTitle>
             <Truck className="h-4 w-4 text-blue-400" />
           </CardHeader>
@@ -96,13 +96,13 @@ export default async function PurchaseOrdersPage() {
         <Card className="glass-card border-green-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Value
+              Toplam Değer
             </CardTitle>
             <CheckCircle className="h-4 w-4 text-green-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">
-              ${stats.totalValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              {stats.totalValue.toLocaleString("tr-TR", { style: "currency", currency: "TRY", minimumFractionDigits: 2 })}
             </div>
           </CardContent>
         </Card>
@@ -111,7 +111,7 @@ export default async function PurchaseOrdersPage() {
       {/* Orders List */}
       <Card className="glass-card">
         <CardHeader>
-          <CardTitle className="text-foreground">All Purchase Orders</CardTitle>
+          <CardTitle className="text-foreground">Tüm Satın Alma Siparişleri</CardTitle>
         </CardHeader>
         <CardContent>
           {purchaseOrders.length > 0 ? (
@@ -120,25 +120,25 @@ export default async function PurchaseOrdersPage() {
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Order #
+                      Sipariş No
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Supplier
+                      Tedarikçi
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Status
+                      Durum
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Items
+                      Kalemler
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Total
+                      Toplam
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Expected
+                      Beklenen
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Created
+                      Oluşturulma
                     </th>
                   </tr>
                 </thead>
@@ -182,18 +182,18 @@ export default async function PurchaseOrdersPage() {
                           <span className="text-foreground">
                             {receivedItems}/{totalItems}
                           </span>
-                          <span className="text-muted-foreground text-xs ml-1">units</span>
+                          <span className="text-muted-foreground text-xs ml-1">adet</span>
                         </td>
                         <td className="py-3 px-4 text-foreground font-medium">
-                          ${Number(po.total).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                          {Number(po.total).toLocaleString("tr-TR", { style: "currency", currency: "TRY", minimumFractionDigits: 2 })}
                         </td>
                         <td className="py-3 px-4 text-muted-foreground">
                           {po.expectedDate
-                            ? new Date(po.expectedDate).toLocaleDateString()
+                            ? new Date(po.expectedDate).toLocaleDateString("tr-TR")
                             : "-"}
                         </td>
                         <td className="py-3 px-4 text-muted-foreground">
-                          {new Date(po.createdAt).toLocaleDateString()}
+                          {new Date(po.createdAt).toLocaleDateString("tr-TR")}
                         </td>
                       </tr>
                     );
@@ -204,11 +204,11 @@ export default async function PurchaseOrdersPage() {
           ) : (
             <div className="text-center py-12">
               <ClipboardList className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No purchase orders yet.</p>
+              <p className="text-muted-foreground">Henüz satın alma siparişi yok.</p>
               <Link href="/purchase-orders/new" className="mt-4 inline-block">
                 <Button variant="outline">
                   <Plus className="w-4 h-4 mr-2" />
-                  Create First Order
+                  İlk Siparişi Oluştur
                 </Button>
               </Link>
             </div>

@@ -6,11 +6,13 @@
         "name": "next"
       }
     ],
-    "declaration": false,
-    "declarationMap": false,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "skipLibCheck": true,
+    "declaration": false,
+    "declarationMap": false
   },
   "include": [
     "**/*.ts",

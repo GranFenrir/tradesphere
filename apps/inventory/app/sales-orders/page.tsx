@@ -5,12 +5,12 @@ import { Plus, ShoppingCart, Package, Clock, CheckCircle, XCircle, Truck, Dollar
 import Link from "next/link";
 
 const statusConfig: Record<string, { label: string; color: string; icon: typeof Clock }> = {
-  [OrderStatus.DRAFT]: { label: "Draft", color: "bg-gray-500/20 text-gray-400 border-gray-500/30", icon: ShoppingCart },
-  [OrderStatus.PENDING]: { label: "Pending", color: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30", icon: Clock },
-  [OrderStatus.CONFIRMED]: { label: "Confirmed", color: "bg-blue-500/20 text-blue-400 border-blue-500/30", icon: CheckCircle },
-  [OrderStatus.SHIPPED]: { label: "Shipped", color: "bg-purple-500/20 text-purple-400 border-purple-500/30", icon: Truck },
-  [OrderStatus.DELIVERED]: { label: "Delivered", color: "bg-green-500/20 text-green-400 border-green-500/30", icon: CheckCircle },
-  [OrderStatus.CANCELLED]: { label: "Cancelled", color: "bg-red-500/20 text-red-400 border-red-500/30", icon: XCircle },
+  [OrderStatus.DRAFT]: { label: "Taslak", color: "bg-gray-500/20 text-gray-400 border-gray-500/30", icon: ShoppingCart },
+  [OrderStatus.PENDING]: { label: "Bekliyor", color: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30", icon: Clock },
+  [OrderStatus.CONFIRMED]: { label: "Onaylandı", color: "bg-blue-500/20 text-blue-400 border-blue-500/30", icon: CheckCircle },
+  [OrderStatus.SHIPPED]: { label: "Kargoya Verildi", color: "bg-purple-500/20 text-purple-400 border-purple-500/30", icon: Truck },
+  [OrderStatus.DELIVERED]: { label: "Teslim Edildi", color: "bg-green-500/20 text-green-400 border-green-500/30", icon: CheckCircle },
+  [OrderStatus.CANCELLED]: { label: "İptal", color: "bg-red-500/20 text-red-400 border-red-500/30", icon: XCircle },
 } as const;
 
 export default async function SalesOrdersPage() {
@@ -42,15 +42,15 @@ export default async function SalesOrdersPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Sales Orders</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Satış Siparişleri</h1>
           <p className="text-muted-foreground mt-2">
-            Manage customer orders and shipments.
+            Müşteri siparişlerini ve sevkiyatları yönetin.
           </p>
         </div>
         <Link href="/sales-orders/new">
           <Button className="shadow-[0_0_15px_rgba(168,85,247,0.4)]">
             <Plus className="w-4 h-4 mr-2" />
-            New Sales Order
+            Yeni Satış Siparişi
           </Button>
         </Link>
       </div>
@@ -59,7 +59,7 @@ export default async function SalesOrdersPage() {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Orders</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Toplam Sipariş</CardTitle>
             <ShoppingCart className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
@@ -69,7 +69,7 @@ export default async function SalesOrdersPage() {
 
         <Card className="glass-card border-yellow-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Draft</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Taslak</CardTitle>
             <ShoppingCart className="h-4 w-4 text-yellow-400" />
           </CardHeader>
           <CardContent>
@@ -79,7 +79,7 @@ export default async function SalesOrdersPage() {
 
         <Card className="glass-card border-blue-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Pending</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Bekliyor</CardTitle>
             <Clock className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
@@ -89,7 +89,7 @@ export default async function SalesOrdersPage() {
 
         <Card className="glass-card border-purple-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Shipped</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Kargoya Verildi</CardTitle>
             <Truck className="h-4 w-4 text-purple-400" />
           </CardHeader>
           <CardContent>
@@ -99,12 +99,12 @@ export default async function SalesOrdersPage() {
 
         <Card className="glass-card border-green-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Gelir</CardTitle>
             <DollarSign className="h-4 w-4 text-green-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">
-              ${stats.revenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              {stats.revenue.toLocaleString("tr-TR", { style: "currency", currency: "TRY", minimumFractionDigits: 2 })}
             </div>
           </CardContent>
         </Card>
@@ -113,7 +113,7 @@ export default async function SalesOrdersPage() {
       {/* Orders List */}
       <Card className="glass-card">
         <CardHeader>
-          <CardTitle className="text-foreground">All Sales Orders</CardTitle>
+          <CardTitle className="text-foreground">Tüm Satış Siparişleri</CardTitle>
         </CardHeader>
         <CardContent>
           {salesOrders.length > 0 ? (
@@ -121,12 +121,12 @@ export default async function SalesOrdersPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Order #</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Customer</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Items</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Total</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Created</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Sipariş No</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Müşteri</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Durum</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Kalemler</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Toplam</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Oluşturulma</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,7 +150,7 @@ export default async function SalesOrdersPage() {
                         </td>
                         <td className="py-3 px-4">
                           <div>
-                            <p className="text-foreground">{so.customer?.name ?? "Unknown"}</p>
+                            <p className="text-foreground">{so.customer?.name ?? "Bilinmiyor"}</p>
                             <p className="text-xs text-muted-foreground">{so.customer?.email ?? ""}</p>
                           </div>
                         </td>
@@ -164,13 +164,13 @@ export default async function SalesOrdersPage() {
                         </td>
                         <td className="py-3 px-4">
                           <span className="text-foreground">{totalItems}</span>
-                          <span className="text-muted-foreground text-xs ml-1">units</span>
+                          <span className="text-muted-foreground text-xs ml-1">adet</span>
                         </td>
                         <td className="py-3 px-4 text-foreground font-medium">
-                          ${Number(so.total).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                          {Number(so.total).toLocaleString("tr-TR", { style: "currency", currency: "TRY", minimumFractionDigits: 2 })}
                         </td>
                         <td className="py-3 px-4 text-muted-foreground">
-                          {new Date(so.createdAt).toLocaleDateString()}
+                          {new Date(so.createdAt).toLocaleDateString("tr-TR")}
                         </td>
                       </tr>
                     );
@@ -181,11 +181,11 @@ export default async function SalesOrdersPage() {
           ) : (
             <div className="text-center py-12">
               <ShoppingCart className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No sales orders yet.</p>
+              <p className="text-muted-foreground">Henüz satış siparişi yok.</p>
               <Link href="/sales-orders/new" className="mt-4 inline-block">
                 <Button variant="outline">
                   <Plus className="w-4 h-4 mr-2" />
-                  Create First Order
+                  İlk Siparişi Oluştur
                 </Button>
               </Link>
             </div>

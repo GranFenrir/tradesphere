@@ -43,8 +43,8 @@ export default async function Page() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Analytics Overview</h1>
-          <p className="text-muted-foreground mt-2">Real-time inventory insights and financial metrics.</p>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Analitik Genel Bakış</h1>
+          <p className="text-muted-foreground mt-2">Anlık envanter içgörüleri ve finansal metrikler.</p>
         </div>
       </div>
 
@@ -52,58 +52,58 @@ export default async function Page() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Liquidity Tied Up</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Bağlı Likidite</CardTitle>
             <DollarSign className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">
-              {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(liquidityTiedUp)}
+              {new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(liquidityTiedUp)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Capital in inventory
+              Envanterdeki sermaye
             </p>
           </CardContent>
         </Card>
 
         <Card className="glass-card border-green-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Potential Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Potansiyel Gelir</CardTitle>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">
-              {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(potentialRevenue)}
+              {new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(potentialRevenue)}
             </div>
             <p className="text-xs text-green-400 flex items-center mt-1">
-              <ArrowUpRight className="w-3 h-3 mr-1" /> {marginPercentage}% margin
+              <ArrowUpRight className="w-3 h-3 mr-1" /> %{marginPercentage} marj
             </p>
           </CardContent>
         </Card>
 
         <Card className="glass-card border-red-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Dead Stock Value</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Ölü Stok Değeri</CardTitle>
             <AlertTriangle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">
-              {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(deadStockValue)}
+              {new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(deadStockValue)}
             </div>
             <p className="text-xs text-red-400 flex items-center mt-1">
-              {overstockedItems.length} overstocked items
+              {overstockedItems.length} fazla stoklu ürün
             </p>
           </CardContent>
         </Card>
 
         <Card className="glass-card border-blue-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Products</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Toplam Ürün</CardTitle>
             <Package className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">{totalProducts}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              In catalog
+              Katalogda
             </p>
           </CardContent>
         </Card>
@@ -113,16 +113,16 @@ export default async function Page() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="glass-card border-border">
           <CardHeader>
-            <CardTitle className="text-foreground">Stock Health Distribution</CardTitle>
+            <CardTitle className="text-foreground">Stok Sağlığı Dağılımı</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <span className="text-sm text-muted-foreground">Healthy Stock</span>
+                  <span className="text-sm text-muted-foreground">Sağlıklı Stok</span>
                 </div>
-                <span className="text-foreground font-medium">{healthyItems.length} items</span>
+                <span className="text-foreground font-medium">{healthyItems.length} ürün</span>
               </div>
               <div className="w-full bg-white/10 rounded-full h-2">
                 <div 
@@ -134,9 +134,9 @@ export default async function Page() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                  <span className="text-sm text-muted-foreground">Low Stock</span>
+                  <span className="text-sm text-muted-foreground">Düşük Stok</span>
                 </div>
-                <span className="text-foreground font-medium">{lowStockItems.length} items</span>
+                <span className="text-foreground font-medium">{lowStockItems.length} ürün</span>
               </div>
               <div className="w-full bg-white/10 rounded-full h-2">
                 <div 
@@ -148,9 +148,9 @@ export default async function Page() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <span className="text-sm text-muted-foreground">Out of Stock</span>
+                  <span className="text-sm text-muted-foreground">Stok Yok</span>
                 </div>
-                <span className="text-foreground font-medium">{outOfStockItems.length} items</span>
+                <span className="text-foreground font-medium">{outOfStockItems.length} ürün</span>
               </div>
               <div className="w-full bg-white/10 rounded-full h-2">
                 <div 
@@ -162,9 +162,9 @@ export default async function Page() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                  <span className="text-sm text-muted-foreground">Overstocked</span>
+                  <span className="text-sm text-muted-foreground">Fazla Stok</span>
                 </div>
-                <span className="text-foreground font-medium">{overstockedItems.length} items</span>
+                <span className="text-foreground font-medium">{overstockedItems.length} ürün</span>
               </div>
               <div className="w-full bg-white/10 rounded-full h-2">
                 <div 
@@ -178,7 +178,7 @@ export default async function Page() {
 
         <Card className="glass-card border-border">
           <CardHeader>
-            <CardTitle className="text-foreground">Items Requiring Attention</CardTitle>
+            <CardTitle className="text-foreground">İlgi Gerektiren Ürünler</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -190,17 +190,17 @@ export default async function Page() {
                   </div>
                   <div className="text-right">
                     <p className={`text-sm font-medium ${item.currentStock === 0 ? 'text-red-400' : 'text-orange-400'}`}>
-                      {item.currentStock} units
+                      {item.currentStock} adet
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Reorder at {item.reorderPoint}
+                      Yeniden sipariş: {item.reorderPoint}
                     </p>
                   </div>
                 </div>
               ))}
               {outOfStockItems.length === 0 && lowStockItems.length === 0 && (
                 <p className="text-sm text-muted-foreground text-center py-4">
-                  All items are well-stocked! 🎉
+                  Tüm ürünler yeterli stokta! 🎉
                 </p>
               )}
             </div>

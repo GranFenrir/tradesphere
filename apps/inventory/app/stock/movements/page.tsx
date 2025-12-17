@@ -13,12 +13,12 @@ import Link from "next/link";
 const movementTypeConfig = {
   IN: {
     icon: ArrowDownCircle,
-    label: "Stock In",
+    label: "Stok Girişi",
     color: "text-green-400 bg-green-500/10 border-green-500/30",
   },
   OUT: {
     icon: ArrowUpCircle,
-    label: "Stock Out",
+    label: "Stok Çıkışı",
     color: "text-red-400 bg-red-500/10 border-red-500/30",
   },
   TRANSFER: {
@@ -65,24 +65,24 @@ export default async function MovementsPage() {
             className="text-muted-foreground hover:text-foreground flex items-center gap-1 mb-2 text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Stock
+            Stok&apos;a Dön
           </Link>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Movement History</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Hareket Geçmişi</h1>
           <p className="text-muted-foreground mt-2">
-            Track all stock movements across your warehouses.
+            Tüm depolardaki stok hareketlerini takip edin.
           </p>
         </div>
         <div className="flex gap-2">
           <Link href="/stock/in">
             <Button variant="outline" className="border-green-500/30 hover:bg-green-500/10">
               <ArrowDownCircle className="w-4 h-4 mr-2 text-green-400" />
-              Stock In
+              Stok Girişi
             </Button>
           </Link>
           <Link href="/stock/out">
             <Button variant="outline" className="border-red-500/30 hover:bg-red-500/10">
               <ArrowUpCircle className="w-4 h-4 mr-2 text-red-400" />
-              Stock Out
+              Stok Çıkışı
             </Button>
           </Link>
           <Link href="/stock/transfer">
@@ -102,7 +102,7 @@ export default async function MovementsPage() {
               <History className="w-6 h-6 text-muted-foreground" />
               <div>
                 <p className="text-2xl font-bold text-foreground">{stats.total}</p>
-                <p className="text-xs text-muted-foreground">Total</p>
+                <p className="text-xs text-muted-foreground">Toplam</p>
               </div>
             </div>
           </CardContent>
@@ -113,7 +113,7 @@ export default async function MovementsPage() {
               <ArrowDownCircle className="w-6 h-6 text-green-400" />
               <div>
                 <p className="text-2xl font-bold text-foreground">{stats.in}</p>
-                <p className="text-xs text-muted-foreground">Stock In</p>
+                <p className="text-xs text-muted-foreground">Stok Girişi</p>
               </div>
             </div>
           </CardContent>
@@ -124,7 +124,7 @@ export default async function MovementsPage() {
               <ArrowUpCircle className="w-6 h-6 text-red-400" />
               <div>
                 <p className="text-2xl font-bold text-foreground">{stats.out}</p>
-                <p className="text-xs text-muted-foreground">Stock Out</p>
+                <p className="text-xs text-muted-foreground">Stok Çıkışı</p>
               </div>
             </div>
           </CardContent>
@@ -135,7 +135,7 @@ export default async function MovementsPage() {
               <ArrowRightLeft className="w-6 h-6 text-blue-400" />
               <div>
                 <p className="text-2xl font-bold text-foreground">{stats.transfer}</p>
-                <p className="text-xs text-muted-foreground">Transfers</p>
+                <p className="text-xs text-muted-foreground">Transferler</p>
               </div>
             </div>
           </CardContent>
@@ -145,7 +145,7 @@ export default async function MovementsPage() {
       {/* Movements List */}
       <Card className="glass-card border-border">
         <CardHeader>
-          <CardTitle className="text-foreground">Recent Movements</CardTitle>
+          <CardTitle className="text-foreground">Son Hareketler</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -207,9 +207,9 @@ export default async function MovementsPage() {
                       {movement.quantity}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(movement.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
+                      {new Date(movement.createdAt).toLocaleDateString("tr-TR", {
                         day: "numeric",
+                        month: "short",
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
@@ -223,13 +223,13 @@ export default async function MovementsPage() {
               <div className="text-center py-12">
                 <History className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground">
-                  No stock movements yet. Record your first movement.
+                  Henüz stok hareketi yok. İlk hareketinizi kaydedin.
                 </p>
                 <div className="flex justify-center gap-4 mt-4">
                   <Link href="/stock/in">
                     <Button variant="outline" className="border-green-500/30">
                       <ArrowDownCircle className="w-4 h-4 mr-2 text-green-400" />
-                      Stock In
+                      Stok Girişi
                     </Button>
                   </Link>
                 </div>

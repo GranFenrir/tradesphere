@@ -37,12 +37,12 @@ interface Stats {
 }
 
 const stageConfig: Record<string, { label: string; color: string; progress: number }> = {
-  PROSPECTING: { label: "Prospecting", color: "bg-gray-500/20 text-gray-400", progress: 10 },
-  QUALIFICATION: { label: "Qualification", color: "bg-blue-500/20 text-blue-400", progress: 25 },
-  PROPOSAL: { label: "Proposal", color: "bg-purple-500/20 text-purple-400", progress: 50 },
-  NEGOTIATION: { label: "Negotiation", color: "bg-yellow-500/20 text-yellow-400", progress: 75 },
-  CLOSED_WON: { label: "Closed Won", color: "bg-green-500/20 text-green-400", progress: 100 },
-  CLOSED_LOST: { label: "Closed Lost", color: "bg-red-500/20 text-red-400", progress: 0 },
+  PROSPECTING: { label: "Araştırma", color: "bg-gray-500/20 text-gray-400", progress: 10 },
+  QUALIFICATION: { label: "Değerlendirme", color: "bg-blue-500/20 text-blue-400", progress: 25 },
+  PROPOSAL: { label: "Teklif", color: "bg-purple-500/20 text-purple-400", progress: 50 },
+  NEGOTIATION: { label: "Müzakere", color: "bg-yellow-500/20 text-yellow-400", progress: 75 },
+  CLOSED_WON: { label: "Kazanıldı", color: "bg-green-500/20 text-green-400", progress: 100 },
+  CLOSED_LOST: { label: "Kaybedildi", color: "bg-red-500/20 text-red-400", progress: 0 },
 };
 
 export default function OpportunitiesPage() {
@@ -87,16 +87,16 @@ export default function OpportunitiesPage() {
   });
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("tr-TR", {
       style: "currency",
-      currency: "USD",
+      currency: "TRY",
       maximumFractionDigits: 0,
     }).format(amount);
   };
 
   const formatDate = (date: string | null) => {
     if (!date) return "—";
-    return new Date(date).toLocaleDateString("en-US", {
+    return new Date(date).toLocaleDateString("tr-TR", {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -116,15 +116,15 @@ export default function OpportunitiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Opportunities</h1>
+          <h1 className="text-3xl font-bold text-foreground">Fırsatlar</h1>
           <p className="text-muted-foreground mt-1">
-            Track deals through your sales pipeline
+            Satış hattınızdaki anlaşmaları takip edin
           </p>
         </div>
         <Button asChild>
           <Link href="/crm/opportunities/new">
             <Plus className="w-4 h-4 mr-2" />
-            New Opportunity
+            Yeni Fırsat
           </Link>
         </Button>
       </div>
@@ -134,7 +134,7 @@ export default function OpportunitiesPage() {
         <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Deals
+              Toplam Anlaşma
             </CardTitle>
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -146,7 +146,7 @@ export default function OpportunitiesPage() {
         <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Open Pipeline
+              Açık Pipeline
             </CardTitle>
             <Clock className="h-4 w-4 text-blue-400" />
           </CardHeader>
@@ -160,7 +160,7 @@ export default function OpportunitiesPage() {
         <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Won
+              Kazanılan
             </CardTitle>
             <CheckCircle className="h-4 w-4 text-green-400" />
           </CardHeader>
@@ -174,7 +174,7 @@ export default function OpportunitiesPage() {
         <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Lost
+              Kaybedilen
             </CardTitle>
             <XCircle className="h-4 w-4 text-red-400" />
           </CardHeader>
@@ -188,7 +188,7 @@ export default function OpportunitiesPage() {
         <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Avg. Probability
+              Ort. Olasılık
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
@@ -206,7 +206,7 @@ export default function OpportunitiesPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search by name, customer..."
+            placeholder="İsim, müşteri ile ara..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2 bg-muted/20 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
@@ -217,13 +217,13 @@ export default function OpportunitiesPage() {
           onChange={(e) => setStageFilter(e.target.value)}
           className="px-3 py-2 bg-muted/20 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
         >
-          <option value="all">All Stages</option>
-          <option value="PROSPECTING">Prospecting</option>
-          <option value="QUALIFICATION">Qualification</option>
-          <option value="PROPOSAL">Proposal</option>
-          <option value="NEGOTIATION">Negotiation</option>
-          <option value="CLOSED_WON">Closed Won</option>
-          <option value="CLOSED_LOST">Closed Lost</option>
+          <option value="all">Tüm Aşamalar</option>
+          <option value="PROSPECTING">Araştırma</option>
+          <option value="QUALIFICATION">Değerlendirme</option>
+          <option value="PROPOSAL">Teklif</option>
+          <option value="NEGOTIATION">Müzakere</option>
+          <option value="CLOSED_WON">Kazanıldı</option>
+          <option value="CLOSED_LOST">Kaybedildi</option>
         </select>
       </div>
 
@@ -235,25 +235,25 @@ export default function OpportunitiesPage() {
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Opportunity
+                    Fırsat
                   </th>
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Customer
+                    Müşteri
                   </th>
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Stage
+                    Aşama
                   </th>
                   <th className="text-right p-4 text-sm font-medium text-muted-foreground">
-                    Amount
+                    Tutar
                   </th>
                   <th className="text-right p-4 text-sm font-medium text-muted-foreground">
-                    Probability
+                    Olasılık
                   </th>
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Expected Close
+                    Beklenen Kapanış
                   </th>
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Assigned
+                    Atanan
                   </th>
                 </tr>
               </thead>
@@ -261,7 +261,7 @@ export default function OpportunitiesPage() {
                 {filteredOpportunities.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="text-center p-8 text-muted-foreground">
-                      No opportunities found
+                      Fırsat bulunamadı
                     </td>
                   </tr>
                 ) : (
@@ -319,7 +319,7 @@ export default function OpportunitiesPage() {
                           {formatDate(opp.expectedCloseDate)}
                         </td>
                         <td className="p-4 text-muted-foreground">
-                          {opp.assignedTo?.name ?? "Unassigned"}
+                          {opp.assignedTo?.name ?? "Atanmamış"}
                         </td>
                       </tr>
                     );

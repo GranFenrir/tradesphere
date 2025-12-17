@@ -84,19 +84,19 @@ export function SettingsForm({ user }: SettingsFormProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <User className="w-5 h-5 text-primary" />
-              <CardTitle className="text-foreground">Profile Settings</CardTitle>
+              <CardTitle className="text-foreground">Profil Ayarları</CardTitle>
             </div>
             {saved === 'profile' && (
               <span className="text-xs text-green-500 flex items-center gap-1">
-                <Check className="w-3 h-3" /> Saved
+                <Check className="w-3 h-3" /> Kaydedildi
               </span>
             )}
           </div>
-          <CardDescription className="text-muted-foreground">Update your personal information.</CardDescription>
+          <CardDescription className="text-muted-foreground">Kişisel bilgilerinizi güncelleyin.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">
-            <label className="text-sm font-medium text-foreground">Display Name</label>
+            <label className="text-sm font-medium text-foreground">Görünen Ad</label>
             <input 
               type="text"
               value={name}
@@ -105,7 +105,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
             />
           </div>
           <div className="grid gap-2">
-            <label className="text-sm font-medium text-foreground">Email</label>
+            <label className="text-sm font-medium text-foreground">E-posta</label>
             <input 
               type="email"
               value={email}
@@ -115,7 +115,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
           </div>
           <Button onClick={handleProfileSave} disabled={isPending} className="mt-2">
             {isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            Save Changes
+            Değişiklikleri Kaydet
           </Button>
         </CardContent>
       </Card>
@@ -126,19 +126,19 @@ export function SettingsForm({ user }: SettingsFormProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Bell className="w-5 h-5 text-blue-500" />
-              <CardTitle className="text-foreground">Notifications</CardTitle>
+              <CardTitle className="text-foreground">Bildirimler</CardTitle>
             </div>
             {saved === 'notifications' && (
               <span className="text-xs text-green-500 flex items-center gap-1">
-                <Check className="w-3 h-3" /> Saved
+                <Check className="w-3 h-3" /> Kaydedildi
               </span>
             )}
           </div>
-          <CardDescription className="text-muted-foreground">Configure how you receive alerts.</CardDescription>
+          <CardDescription className="text-muted-foreground">Uyarıları nasıl alacağınızı yapılandırın.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between py-2 border-b border-border">
-            <span className="text-sm text-foreground">Email Notifications</span>
+            <span className="text-sm text-foreground">E-posta Bildirimleri</span>
             <button
               onClick={() => handleNotificationToggle('email')}
               className={`w-10 h-6 rounded-full relative transition-colors ${
@@ -151,7 +151,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
             </button>
           </div>
           <div className="flex items-center justify-between py-2 pt-4">
-            <span className="text-sm text-foreground">Push Notifications</span>
+            <span className="text-sm text-foreground">Anlık Bildirimler</span>
             <button
               onClick={() => handleNotificationToggle('push')}
               className={`w-10 h-6 rounded-full relative transition-colors ${
@@ -172,15 +172,15 @@ export function SettingsForm({ user }: SettingsFormProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Palette className="w-5 h-5 text-purple-500" />
-              <CardTitle className="text-foreground">Appearance</CardTitle>
+              <CardTitle className="text-foreground">Görünüm</CardTitle>
             </div>
             {saved === 'appearance' && (
               <span className="text-xs text-green-500 flex items-center gap-1">
-                <Check className="w-3 h-3" /> Saved
+                <Check className="w-3 h-3" /> Kaydedildi
               </span>
             )}
           </div>
-          <CardDescription className="text-muted-foreground">Customize the look and feel.</CardDescription>
+          <CardDescription className="text-muted-foreground">Görünümü ve hissi özelleştirin.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">
@@ -190,7 +190,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
                 theme === 'dark' ? 'border-primary' : 'border-border opacity-50 hover:opacity-100'
               }`}
             >
-              <div className="absolute inset-0 flex items-center justify-center text-xs text-white">Dark</div>
+              <div className="absolute inset-0 flex items-center justify-center text-xs text-white">Koyu</div>
               {theme === 'dark' && (
                 <div className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full" />
               )}
@@ -201,7 +201,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
                 theme === 'light' ? 'border-primary' : 'border-border opacity-50 hover:opacity-100'
               }`}
             >
-              <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-900">Light</div>
+              <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-900">Açık</div>
               {theme === 'light' && (
                 <div className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full" />
               )}
@@ -215,14 +215,14 @@ export function SettingsForm({ user }: SettingsFormProps) {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-orange-500" />
-            <CardTitle className="text-foreground">User Management</CardTitle>
+            <CardTitle className="text-foreground">Kullanıcı Yönetimi</CardTitle>
           </div>
-          <CardDescription className="text-muted-foreground">Manage team members and permissions.</CardDescription>
+          <CardDescription className="text-muted-foreground">Ekip üyelerini ve izinleri yönetin.</CardDescription>
         </CardHeader>
         <CardContent>
           <Link href="/settings/users">
             <Button variant="outline" className="gap-2 w-full justify-between">
-              <span>Manage Users</span>
+              <span>Kullanıcıları Yönet</span>
               <ChevronRight className="w-4 h-4" />
             </Button>
           </Link>

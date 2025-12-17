@@ -41,13 +41,13 @@ interface Stats {
 }
 
 const statusConfig: Record<string, { label: string; color: string; icon: typeof CheckCircle }> = {
-  DRAFT: { label: "Draft", color: "bg-gray-500/20 text-gray-400", icon: FileText },
-  SENT: { label: "Sent", color: "bg-blue-500/20 text-blue-400", icon: ArrowUpRight },
-  PAID: { label: "Paid", color: "bg-green-500/20 text-green-400", icon: CheckCircle },
-  PARTIAL: { label: "Partial", color: "bg-yellow-500/20 text-yellow-400", icon: Clock },
-  OVERDUE: { label: "Overdue", color: "bg-red-500/20 text-red-400", icon: AlertTriangle },
-  CANCELLED: { label: "Cancelled", color: "bg-gray-500/20 text-gray-400", icon: FileText },
-  REFUNDED: { label: "Refunded", color: "bg-purple-500/20 text-purple-400", icon: ArrowDownLeft },
+  DRAFT: { label: "Taslak", color: "bg-gray-500/20 text-gray-400", icon: FileText },
+  SENT: { label: "Gönderildi", color: "bg-blue-500/20 text-blue-400", icon: ArrowUpRight },
+  PAID: { label: "Ödendi", color: "bg-green-500/20 text-green-400", icon: CheckCircle },
+  PARTIAL: { label: "Kısmi", color: "bg-yellow-500/20 text-yellow-400", icon: Clock },
+  OVERDUE: { label: "Gecikmiş", color: "bg-red-500/20 text-red-400", icon: AlertTriangle },
+  CANCELLED: { label: "İptal", color: "bg-gray-500/20 text-gray-400", icon: FileText },
+  REFUNDED: { label: "İade Edildi", color: "bg-purple-500/20 text-purple-400", icon: ArrowDownLeft },
 };
 
 export default function InvoicesPage() {
@@ -97,14 +97,14 @@ export default function InvoicesPage() {
   });
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("tr-TR", {
       style: "currency",
-      currency: "USD",
+      currency: "TRY",
     }).format(amount);
   };
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("en-US", {
+    return new Date(date).toLocaleDateString("tr-TR", {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -124,22 +124,22 @@ export default function InvoicesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Invoices</h1>
+          <h1 className="text-3xl font-bold text-foreground">Faturalar</h1>
           <p className="text-muted-foreground mt-1">
-            Manage sales invoices and purchase bills
+            Satış faturalarını ve alış faturalarını yönetin
           </p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" asChild>
             <Link href="/invoices/new?type=purchase">
               <ArrowDownLeft className="w-4 h-4 mr-2" />
-              New Bill
+              Yeni Alış Faturası
             </Link>
           </Button>
           <Button asChild>
             <Link href="/invoices/new?type=sales">
               <Plus className="w-4 h-4 mr-2" />
-              New Invoice
+              Yeni Satış Faturası
             </Link>
           </Button>
         </div>

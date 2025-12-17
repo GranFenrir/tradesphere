@@ -37,35 +37,35 @@ export default async function StockPage() {
   // Get status for a product based on its total stock
   const getProductStatus = (product: typeof stockItems[0]["product"]) => {
     if (product.currentStock === 0) {
-      return { status: "Out of Stock", color: "text-red-400 bg-red-500/10 border-red-500/30" };
+      return { status: "Stok Yok", color: "text-red-400 bg-red-500/10 border-red-500/30" };
     } else if (product.currentStock <= product.reorderPoint) {
-      return { status: "Low Stock", color: "text-orange-400 bg-orange-500/10 border-orange-500/30" };
+      return { status: "Düşük Stok", color: "text-orange-400 bg-orange-500/10 border-orange-500/30" };
     } else if (product.currentStock > product.maxStock) {
-      return { status: "Overstocked", color: "text-blue-400 bg-blue-500/10 border-blue-500/30" };
+      return { status: "Fazla Stok", color: "text-blue-400 bg-blue-500/10 border-blue-500/30" };
     }
-    return { status: "In Stock", color: "text-green-400 bg-green-500/10 border-green-500/30" };
+    return { status: "Stokta", color: "text-green-400 bg-green-500/10 border-green-500/30" };
   };
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Stock Overview</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Stok Genel Görünümü</h1>
           <p className="text-muted-foreground mt-2">
-            View and manage stock levels across all locations.
+            Tüm konumlardaki stok seviyelerini görüntüleyin ve yönetin.
           </p>
         </div>
         <div className="flex gap-2">
           <Link href="/stock/in">
             <Button variant="outline" className="border-green-500/30 hover:bg-green-500/10">
               <ArrowDownCircle className="w-4 h-4 mr-2 text-green-400" />
-              Stock In
+              Stok Girişi
             </Button>
           </Link>
           <Link href="/stock/out">
             <Button variant="outline" className="border-red-500/30 hover:bg-red-500/10">
               <ArrowUpCircle className="w-4 h-4 mr-2 text-red-400" />
-              Stock Out
+              Stok Çıkışı
             </Button>
           </Link>
           <Link href="/stock/transfer">
@@ -77,7 +77,7 @@ export default async function StockPage() {
           <Link href="/stock/movements">
             <Button variant="ghost">
               <History className="w-4 h-4 mr-2" />
-              History
+              Hareketler
             </Button>
           </Link>
         </div>
@@ -88,19 +88,19 @@ export default async function StockPage() {
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Stock Units
+              Toplam Stok Birimi
             </CardTitle>
             <Package className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{totalUnits.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-foreground">{totalUnits.toLocaleString("tr-TR")}</div>
           </CardContent>
         </Card>
 
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Products in Stock
+              Stoktaki Ürünler
             </CardTitle>
             <Building2 className="h-4 w-4 text-blue-400" />
           </CardHeader>
@@ -112,7 +112,7 @@ export default async function StockPage() {
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Active Locations
+              Aktif Konumlar
             </CardTitle>
             <MapPin className="h-4 w-4 text-green-400" />
           </CardHeader>
@@ -125,19 +125,19 @@ export default async function StockPage() {
       {/* Stock Table */}
       <Card className="glass-card border-border">
         <CardHeader>
-          <CardTitle className="text-foreground">Stock by Location</CardTitle>
+          <CardTitle className="text-foreground">Konuma Göre Stok</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Product</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Ürün</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">SKU</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Warehouse</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Location</th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Quantity</th>
-                  <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Depo</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Konum</th>
+                  <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Miktar</th>
+                  <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Durum</th>
                 </tr>
               </thead>
               <tbody>
@@ -186,12 +186,12 @@ export default async function StockPage() {
               <div className="text-center py-12">
                 <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground">
-                  No stock items yet. Use Stock In to add inventory.
+                  Henüz stok kaydı yok. Envanter eklemek için Stok Girişi kullanın.
                 </p>
                 <Link href="/stock/in" className="mt-4 inline-block">
                   <Button>
                     <ArrowDownCircle className="w-4 h-4 mr-2" />
-                    Stock In
+                    Stok Girişi
                   </Button>
                 </Link>
               </div>

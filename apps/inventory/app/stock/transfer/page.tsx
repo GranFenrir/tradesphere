@@ -78,10 +78,10 @@ function StockTransferForm() {
           <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/30">
             <ArrowRightLeft className="w-6 h-6 text-blue-400" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Stock Transfer</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Stok Transferi</h1>
         </div>
         <p className="text-muted-foreground mt-2">
-          Move inventory between warehouse locations.
+          Depo konumları arasında envanter taşıyın.
         </p>
       </div>
 
@@ -93,13 +93,13 @@ function StockTransferForm() {
 
       <Card className="glass-card border-blue-500/20">
         <CardHeader>
-          <CardTitle className="text-foreground">Transfer Stock</CardTitle>
+          <CardTitle className="text-foreground">Stok Transferi</CardTitle>
         </CardHeader>
         <CardContent>
           <form action={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">
-                Product
+                Ürün
               </label>
               <select
                 name="productId"
@@ -111,7 +111,7 @@ function StockTransferForm() {
                 }}
                 className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
-                <option value="">Select a product...</option>
+                <option value="">Ürün seçin...</option>
                 {products.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.name} ({p.sku})
@@ -123,7 +123,7 @@ function StockTransferForm() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">
-                  From Location
+                  Kaynak Konum
                 </label>
                 <select
                   name="fromLocationId"
@@ -134,7 +134,7 @@ function StockTransferForm() {
                   className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
                 >
                   <option value="">
-                    {selectedProduct ? "Select source..." : "Select product first..."}
+                    {selectedProduct ? "Kaynak seçin..." : "Önce ürün seçin..."}
                   </option>
                   {sourceLocations.map((loc) => {
                     const stock = getStockAtLocation(loc.id);
@@ -149,7 +149,7 @@ function StockTransferForm() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">
-                  To Location
+                  Hedef Konum
                 </label>
                 <select
                   name="toLocationId"
@@ -158,7 +158,7 @@ function StockTransferForm() {
                   className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
                 >
                   <option value="">
-                    {selectedFromLocation ? "Select destination..." : "Select source first..."}
+                    {selectedFromLocation ? "Hedef seçin..." : "Önce kaynak seçin..."}
                   </option>
                   {destinationLocations.map((loc) => (
                     <option key={loc.id} value={loc.id}>
@@ -172,7 +172,7 @@ function StockTransferForm() {
             {selectedFromLocation && (
               <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
                 <p className="text-sm text-blue-400">
-                  Available at source: <strong>{getStockAtLocation(selectedFromLocation)} units</strong>
+                  Kaynakta mevcut: <strong>{getStockAtLocation(selectedFromLocation)} adet</strong>
                 </p>
               </div>
             )}
@@ -180,7 +180,7 @@ function StockTransferForm() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">
-                  Quantity
+                  Miktar
                 </label>
                 <input
                   name="quantity"
@@ -189,31 +189,31 @@ function StockTransferForm() {
                   max={selectedFromLocation ? getStockAtLocation(selectedFromLocation) : undefined}
                   required
                   className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="Enter quantity"
+                  placeholder="Miktar girin"
                 />
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">
-                  Reference (optional)
+                  Referans (isteğe bağlı)
                 </label>
                 <input
                   name="reference"
                   className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="e.g. TRF-2025-001"
+                  placeholder="örn. TRF-2025-001"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">
-                Notes (optional)
+                Notlar (isteğe bağlı)
               </label>
               <textarea
                 name="notes"
                 rows={2}
                 className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
-                placeholder="e.g. Balancing stock between locations"
+                placeholder="örn. Konumlar arası stok dengeleme"
               />
             </div>
 
@@ -224,14 +224,14 @@ function StockTransferForm() {
                 onClick={() => router.push("/stock")}
                 disabled={isPending}
               >
-                Cancel
+                İptal
               </Button>
               <Button
                 type="submit"
                 disabled={isPending || !selectedFromLocation}
                 className="bg-blue-600 hover:bg-blue-700"
               >
-                {isPending ? "Processing..." : "Transfer Stock"}
+                {isPending ? "İşleniyor..." : "Transfer Et"}
               </Button>
             </div>
           </form>
@@ -243,7 +243,7 @@ function StockTransferForm() {
 
 export default function StockTransferPage() {
   return (
-    <Suspense fallback={<div className="text-foreground">Loading...</div>}>
+    <Suspense fallback={<div className="text-foreground">Yükleniyor...</div>}>
       <StockTransferForm />
     </Suspense>
   );

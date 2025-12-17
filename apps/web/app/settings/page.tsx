@@ -18,8 +18,8 @@ export default async function SettingsPage() {
     return (
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-white neon-text">Settings</h1>
-          <p className="text-muted-foreground mt-2">User not found. Please contact administrator.</p>
+          <h1 className="text-3xl font-bold text-white neon-text">Ayarlar</h1>
+          <p className="text-muted-foreground mt-2">Kullanıcı bulunamadı. Lütfen yöneticiyle iletişime geçin.</p>
         </div>
       </div>
     );
@@ -38,8 +38,8 @@ export default async function SettingsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white neon-text">Settings</h1>
-        <p className="text-muted-foreground mt-2">Manage your account preferences and system settings.</p>
+        <h1 className="text-3xl font-bold text-white neon-text">Ayarlar</h1>
+        <p className="text-muted-foreground mt-2">Hesap tercihlerinizi ve sistem ayarlarınızı yönetin.</p>
       </div>
 
       <SettingsForm

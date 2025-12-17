@@ -60,10 +60,10 @@ function StockInForm() {
           <div className="p-2 rounded-lg bg-green-500/10 border border-green-500/30">
             <ArrowDownCircle className="w-6 h-6 text-green-400" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Stock In</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Stok Girişi</h1>
         </div>
         <p className="text-muted-foreground mt-2">
-          Receive inventory into a warehouse location.
+          Depoya envanter girişi yapın.
         </p>
       </div>
 
@@ -75,20 +75,20 @@ function StockInForm() {
 
       <Card className="glass-card border-green-500/20">
         <CardHeader>
-          <CardTitle className="text-foreground">Receive Stock</CardTitle>
+          <CardTitle className="text-foreground">Stok Al</CardTitle>
         </CardHeader>
         <CardContent>
           <form action={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">
-                Product
+                Ürün
               </label>
               <select
                 name="productId"
                 required
                 className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500"
               >
-                <option value="">Select a product...</option>
+                <option value="">Ürün seçin...</option>
                 {products.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.name} ({p.sku})
@@ -99,14 +99,14 @@ function StockInForm() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">
-                Destination Location
+                Hedef Konum
               </label>
               <select
                 name="toLocationId"
                 required
                 className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500"
               >
-                <option value="">Select a location...</option>
+                <option value="">Konum seçin...</option>
                 {locations.map((loc) => (
                   <option key={loc.id} value={loc.id}>
                     {loc.warehouse.name} → {loc.name} ({loc.code})
@@ -118,7 +118,7 @@ function StockInForm() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">
-                  Quantity
+                  Miktar
                 </label>
                 <input
                   name="quantity"
@@ -126,31 +126,31 @@ function StockInForm() {
                   min="1"
                   required
                   className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500"
-                  placeholder="Enter quantity"
+                  placeholder="Miktar girin"
                 />
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">
-                  Reference (optional)
+                  Referans (isteğe bağlı)
                 </label>
                 <input
                   name="reference"
                   className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500"
-                  placeholder="e.g. PO-2025-001"
+                  placeholder="örn. SIP-2025-001"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">
-                Notes (optional)
+                Notlar (isteğe bağlı)
               </label>
               <textarea
                 name="notes"
                 rows={2}
                 className="w-full bg-muted/50 border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-green-500 resize-none"
-                placeholder="Additional notes..."
+                placeholder="Ek notlar..."
               />
             </div>
 
@@ -161,14 +161,14 @@ function StockInForm() {
                 onClick={() => router.push("/stock")}
                 disabled={isPending}
               >
-                Cancel
+                İptal
               </Button>
               <Button 
                 type="submit" 
                 disabled={isPending}
                 className="bg-green-600 hover:bg-green-700"
               >
-                {isPending ? "Processing..." : "Receive Stock"}
+                {isPending ? "İşleniyor..." : "Stok Al"}
               </Button>
             </div>
           </form>
@@ -180,7 +180,7 @@ function StockInForm() {
 
 export default function StockInPage() {
   return (
-    <Suspense fallback={<div className="text-foreground">Loading...</div>}>
+    <Suspense fallback={<div className="text-foreground">Yükleniyor...</div>}>
       <StockInForm />
     </Suspense>
   );

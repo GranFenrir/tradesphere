@@ -15,17 +15,17 @@ export default async function Page() {
   const productsData = await prisma.product.findMany();
 
   const products = productsData.map((p) => {
-    let status = "In Stock";
+    let status = "Stokta";
     let statusColor = "text-green-400";
 
     if (p.currentStock === 0) {
-      status = "Out of Stock";
+      status = "Stok Yok";
       statusColor = "text-red-400";
     } else if (p.currentStock <= p.reorderPoint) {
-      status = "Low Stock";
+      status = "Düşük Stok";
       statusColor = "text-orange-400";
     } else if (p.currentStock > p.maxStock) {
-      status = "Overstocked";
+      status = "Fazla Stok";
       statusColor = "text-blue-400";
     }
 
@@ -41,21 +41,21 @@ export default async function Page() {
   });
 
   const totalProducts = products.length;
-  const lowStockCount = products.filter((p) => p.status === "Low Stock" || p.status === "Out of Stock").length;
+  const lowStockCount = products.filter((p) => p.status === "Düşük Stok" || p.status === "Stok Yok").length;
   const totalValue = products.reduce((acc, p) => acc + p.price * p.stock, 0);
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Inventory Management</h1>
-          <p className="text-muted-foreground mt-2">Track and manage your global stock levels.</p>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Envanter Yönetimi</h1>
+          <p className="text-muted-foreground mt-2">Küresel stok seviyelerinizi takip edin ve yönetin.</p>
         </div>
         {canCreateProduct && (
           <Link href="/products/new">
             <button className="bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-[0_0_15px_rgba(168,85,247,0.4)]">
               <Plus className="w-4 h-4" />
-              Add Product
+              Ürün Ekle
             </button>
           </Link>
         )}
@@ -64,34 +64,34 @@ export default async function Page() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Products</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Toplam Ürün</CardTitle>
             <Package className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">{totalProducts}</div>
-            <p className="text-xs text-muted-foreground">Real-time count</p>
+            <p className="text-xs text-muted-foreground">Anlık sayım</p>
           </CardContent>
         </Card>
         <Card className="glass-card border-orange-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Low Stock Items</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Düşük Stok Kalemleri</CardTitle>
             <AlertTriangle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">{lowStockCount}</div>
-            <p className="text-xs text-muted-foreground">Needs attention</p>
+            <p className="text-xs text-muted-foreground">İlgi gerekiyor</p>
           </CardContent>
         </Card>
         <Card className="glass-card border-green-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Value</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Toplam Değer</CardTitle>
             <DollarSign className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">
-              {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalValue)}
+              {new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(totalValue)}
             </div>
-            <p className="text-xs text-muted-foreground">Inventory Asset Value</p>
+            <p className="text-xs text-muted-foreground">Envanter Varlık Değeri</p>
           </CardContent>
         </Card>
       </div>
@@ -99,7 +99,7 @@ export default async function Page() {
       <Card className="glass-card border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-foreground">Products</CardTitle>
+            <CardTitle className="text-foreground">Ürünler</CardTitle>
           </div>
         </CardHeader>
         <CardContent>

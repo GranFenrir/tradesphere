@@ -41,17 +41,17 @@ interface Stats {
 }
 
 const statusConfig: Record<string, { label: string; color: string }> = {
-  NEW: { label: "New", color: "bg-blue-500/20 text-blue-400" },
-  CONTACTED: { label: "Contacted", color: "bg-purple-500/20 text-purple-400" },
-  QUALIFIED: { label: "Qualified", color: "bg-green-500/20 text-green-400" },
-  UNQUALIFIED: { label: "Unqualified", color: "bg-gray-500/20 text-gray-400" },
-  CONVERTED: { label: "Converted", color: "bg-emerald-500/20 text-emerald-400" },
+  NEW: { label: "Yeni", color: "bg-blue-500/20 text-blue-400" },
+  CONTACTED: { label: "İletişime Geçildi", color: "bg-purple-500/20 text-purple-400" },
+  QUALIFIED: { label: "Nitelikli", color: "bg-green-500/20 text-green-400" },
+  UNQUALIFIED: { label: "Niteliksiz", color: "bg-gray-500/20 text-gray-400" },
+  CONVERTED: { label: "Dönüştürüldü", color: "bg-emerald-500/20 text-emerald-400" },
 };
 
 const ratingConfig: Record<string, { label: string; color: string }> = {
-  HOT: { label: "🔥 Hot", color: "text-red-400" },
-  WARM: { label: "☀️ Warm", color: "text-yellow-400" },
-  COLD: { label: "❄️ Cold", color: "text-blue-400" },
+  HOT: { label: "🔥 Sıcak", color: "text-red-400" },
+  WARM: { label: "☀️ Ilık", color: "text-yellow-400" },
+  COLD: { label: "❄️ Soğuk", color: "text-blue-400" },
 };
 
 export default function LeadsPage() {
@@ -99,9 +99,9 @@ export default function LeadsPage() {
 
   const formatCurrency = (amount: number | null) => {
     if (!amount) return "—";
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("tr-TR", {
       style: "currency",
-      currency: "USD",
+      currency: "TRY",
       maximumFractionDigits: 0,
     }).format(amount);
   };
@@ -119,15 +119,15 @@ export default function LeadsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Leads</h1>
+          <h1 className="text-3xl font-bold text-foreground">Potansiyel Müşteriler</h1>
           <p className="text-muted-foreground mt-1">
-            Track and nurture potential customers
+            Potansiyel müşterileri takip edin ve geliştirin
           </p>
         </div>
         <Button asChild>
           <Link href="/crm/leads/new">
             <UserPlus className="w-4 h-4 mr-2" />
-            New Lead
+            Yeni Potansiyel Müşteri
           </Link>
         </Button>
       </div>
@@ -137,7 +137,7 @@ export default function LeadsPage() {
         <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Leads
+              Toplam Potansiyel Müşteri
             </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -149,7 +149,7 @@ export default function LeadsPage() {
         <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              New
+              Yeni
             </CardTitle>
             <Star className="h-4 w-4 text-blue-400" />
           </CardHeader>
@@ -161,7 +161,7 @@ export default function LeadsPage() {
         <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Qualified
+              Nitelikli
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-green-400" />
           </CardHeader>
@@ -173,7 +173,7 @@ export default function LeadsPage() {
         <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Converted
+              Dönüştürülen
             </CardTitle>
             <ArrowRight className="h-4 w-4 text-emerald-400" />
           </CardHeader>
@@ -185,7 +185,7 @@ export default function LeadsPage() {
         <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Pipeline Value
+              Pipeline Değeri
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
@@ -203,7 +203,7 @@ export default function LeadsPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search by name, email, company..."
+            placeholder="İsim, e-posta, şirket ile ara..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2 bg-muted/20 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
@@ -214,12 +214,12 @@ export default function LeadsPage() {
           onChange={(e) => setStatusFilter(e.target.value)}
           className="px-3 py-2 bg-muted/20 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
         >
-          <option value="all">All Status</option>
-          <option value="NEW">New</option>
-          <option value="CONTACTED">Contacted</option>
-          <option value="QUALIFIED">Qualified</option>
-          <option value="UNQUALIFIED">Unqualified</option>
-          <option value="CONVERTED">Converted</option>
+          <option value="all">Tüm Durumlar</option>
+          <option value="NEW">Yeni</option>
+          <option value="CONTACTED">İletişime Geçildi</option>
+          <option value="QUALIFIED">Nitelikli</option>
+          <option value="UNQUALIFIED">Niteliksiz</option>
+          <option value="CONVERTED">Dönüştürüldü</option>
         </select>
       </div>
 
@@ -231,25 +231,25 @@ export default function LeadsPage() {
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Name
+                    İsim
                   </th>
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Company
+                    Şirket
                   </th>
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Contact
+                    İletişim
                   </th>
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Rating
+                    Değerlendirme
                   </th>
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Status
+                    Durum
                   </th>
                   <th className="text-right p-4 text-sm font-medium text-muted-foreground">
-                    Est. Value
+                    Tahmini Değer
                   </th>
                   <th className="text-left p-4 text-sm font-medium text-muted-foreground">
-                    Assigned
+                    Atanan
                   </th>
                 </tr>
               </thead>
@@ -257,7 +257,7 @@ export default function LeadsPage() {
                 {filteredLeads.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="text-center p-8 text-muted-foreground">
-                      No leads found
+                      Potansiyel müşteri bulunamadı
                     </td>
                   </tr>
                 ) : (
@@ -313,7 +313,7 @@ export default function LeadsPage() {
                           {formatCurrency(lead.estimatedValue)}
                         </td>
                         <td className="p-4 text-muted-foreground">
-                          {lead.assignedTo?.name ?? "Unassigned"}
+                          {lead.assignedTo?.name ?? "Atanmamış"}
                         </td>
                       </tr>
                     );

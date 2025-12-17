@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./next-auth": "./src/next-auth.ts"
   },
   "scripts": {
     "db:generate": "prisma generate",
@@ -16,9 +17,13 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^5.10.2"
+    "@auth/prisma-adapter": "^2.11.1",
+    "@prisma/client": "^5.10.2",
+    "bcryptjs": "^3.0.3",
+    "next-auth": "5.0.0-beta.30"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^20.11.24",

@@ -65,7 +65,7 @@ export default function EditProductPage() {
   if (loading) {
     return (
       <main className="min-h-screen p-8 flex items-center justify-center">
-        <div className="text-muted-foreground">Loading product...</div>
+        <div className="text-muted-foreground">Ürün yükleniyor...</div>
       </main>
     )
   }
@@ -73,9 +73,9 @@ export default function EditProductPage() {
   if (error || !product) {
     return (
       <main className="min-h-screen p-8 flex flex-col items-center justify-center gap-4">
-        <div className="text-red-400">{error || "Product not found"}</div>
+        <div className="text-red-400">{error || "Ürün bulunamadı"}</div>
         <Button variant="outline" onClick={() => router.push("/")}>
-          Back to Inventory
+          Envantere Dön
         </Button>
       </main>
     )
@@ -86,14 +86,14 @@ export default function EditProductPage() {
       <div className="max-w-2xl mx-auto">
         <Card className="glass-card">
           <CardHeader>
-            <CardTitle>Edit Product: {product.sku}</CardTitle>
+            <CardTitle>Ürün Düzenle: {product.sku}</CardTitle>
           </CardHeader>
           <CardContent>
             <form action={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm text-muted-foreground">
-                    Product Name
+                    Ürün Adı
                   </label>
                   <input
                     type="text"
@@ -107,7 +107,7 @@ export default function EditProductPage() {
 
                 <div className="space-y-2">
                   <label htmlFor="sku" className="text-sm text-muted-foreground">
-                    SKU (cannot be changed)
+                    SKU (değiştirilemez)
                   </label>
                   <input
                     type="text"
@@ -120,7 +120,7 @@ export default function EditProductPage() {
 
                 <div className="space-y-2">
                   <label htmlFor="category" className="text-sm text-muted-foreground">
-                    Category
+                    Kategori
                   </label>
                   <input
                     type="text"
@@ -134,7 +134,7 @@ export default function EditProductPage() {
 
                 <div className="space-y-2">
                   <label htmlFor="currentStock" className="text-sm text-muted-foreground">
-                    Current Stock
+                    Mevcut Stok
                   </label>
                   <input
                     type="number"
@@ -149,7 +149,7 @@ export default function EditProductPage() {
 
                 <div className="space-y-2">
                   <label htmlFor="price" className="text-sm text-muted-foreground">
-                    Price ($)
+                    Fiyat (₺)
                   </label>
                   <input
                     type="number"
@@ -165,7 +165,7 @@ export default function EditProductPage() {
 
                 <div className="space-y-2">
                   <label htmlFor="cost" className="text-sm text-muted-foreground">
-                    Cost ($)
+                    Maliyet (₺)
                   </label>
                   <input
                     type="number"
@@ -181,7 +181,7 @@ export default function EditProductPage() {
 
                 <div className="space-y-2">
                   <label htmlFor="reorderPoint" className="text-sm text-muted-foreground">
-                    Reorder Point (Safety Stock)
+                    Yeniden Sipariş Noktası (Güvenlik Stoku)
                   </label>
                   <input
                     type="number"
@@ -196,7 +196,7 @@ export default function EditProductPage() {
 
                 <div className="space-y-2">
                   <label htmlFor="maxStock" className="text-sm text-muted-foreground">
-                    Max Stock (Liquidity Cap)
+                    Maksimum Stok (Likidite Sınırı)
                   </label>
                   <input
                     type="number"
@@ -212,7 +212,7 @@ export default function EditProductPage() {
 
               <div className="flex gap-4 pt-4">
                 <Button type="submit" disabled={isPending}>
-                  {isPending ? "Saving..." : "Save Changes"}
+                  {isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
                 </Button>
                 <Button
                   type="button"
@@ -220,7 +220,7 @@ export default function EditProductPage() {
                   onClick={() => router.push("/")}
                   disabled={isPending}
                 >
-                  Cancel
+                  İptal
                 </Button>
               </div>
             </form>

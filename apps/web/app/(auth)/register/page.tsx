@@ -31,10 +31,10 @@ export default function RegisterPage() {
         </div>
         <div>
           <CardTitle className="text-2xl font-bold text-foreground">
-            Create account
+            Hesap oluştur
           </CardTitle>
           <p className="text-muted-foreground mt-1">
-            Get started with TradeSphere
+            TradeSphere ile başlayın
           </p>
         </div>
       </CardHeader>
@@ -49,7 +49,7 @@ export default function RegisterPage() {
         <form action={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="name" className="text-sm font-medium text-foreground">
-              Full Name
+              Ad Soyad
             </label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -58,7 +58,7 @@ export default function RegisterPage() {
                 name="name"
                 type="text"
                 required
-                placeholder="John Doe"
+                placeholder="Ahmet Yılmaz"
                 className="w-full pl-10 pr-4 py-2.5 bg-muted/20 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
               />
             </div>
@@ -66,7 +66,7 @@ export default function RegisterPage() {
 
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-medium text-foreground">
-              Email
+              E-posta
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -75,7 +75,7 @@ export default function RegisterPage() {
                 name="email"
                 type="email"
                 required
-                placeholder="you@example.com"
+                placeholder="siz@ornek.com"
                 className="w-full pl-10 pr-4 py-2.5 bg-muted/20 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
               />
             </div>
@@ -83,7 +83,7 @@ export default function RegisterPage() {
 
           <div className="space-y-2">
             <label htmlFor="password" className="text-sm font-medium text-foreground">
-              Password
+              Şifre
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -101,7 +101,7 @@ export default function RegisterPage() {
 
           <div className="space-y-2">
             <label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">
-              Confirm Password
+              Şifre Tekrar
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -120,7 +120,7 @@ export default function RegisterPage() {
           <div className="space-y-2 pt-2">
             <div className="flex items-start gap-2 text-xs text-muted-foreground">
               <CheckCircle className="w-3.5 h-3.5 mt-0.5 text-green-400" />
-              <span>Minimum 8 characters</span>
+              <span>Minimum 8 karakter</span>
             </div>
           </div>
 
@@ -128,22 +128,22 @@ export default function RegisterPage() {
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Creating account...
+                Hesap oluşturuluyor...
               </>
             ) : (
-              "Create account"
+              "Hesap oluştur"
             )}
           </Button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            Already have an account?{" "}
+            Zaten hesabınız var mı?{" "}
             <Link
               href="/login"
               className="text-primary hover:text-primary/80 font-medium transition-colors"
             >
-              Sign in
+              Giriş yap
             </Link>
           </p>
         </div>

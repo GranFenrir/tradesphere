@@ -37,7 +37,7 @@ export function getColumns(permissions: ProductPermissions): ColumnDef<Product>[
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="hover:bg-transparent hover:text-foreground p-0"
           >
-            Product Name
+            Ürün Adı
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
@@ -45,7 +45,7 @@ export function getColumns(permissions: ProductPermissions): ColumnDef<Product>[
     },
     {
       accessorKey: "category",
-      header: "Category",
+      header: "Kategori",
     },
     {
       accessorKey: "stock",
@@ -56,7 +56,7 @@ export function getColumns(permissions: ProductPermissions): ColumnDef<Product>[
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="hover:bg-transparent hover:text-foreground p-0"
           >
-            Stock
+            Stok
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
@@ -64,12 +64,12 @@ export function getColumns(permissions: ProductPermissions): ColumnDef<Product>[
     },
     {
       accessorKey: "price",
-      header: "Price",
+      header: "Fiyat",
       cell: ({ row }) => {
         const amount = parseFloat(row.getValue("price"))
-        const formatted = new Intl.NumberFormat("en-US", {
+        const formatted = new Intl.NumberFormat("tr-TR", {
           style: "currency",
-          currency: "USD",
+          currency: "TRY",
         }).format(amount)
    
         return <div className="font-medium">{formatted}</div>
@@ -77,7 +77,7 @@ export function getColumns(permissions: ProductPermissions): ColumnDef<Product>[
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: "Durum",
       cell: ({ row }) => {
         const status = row.original.status
         const color = row.original.statusColor
@@ -91,7 +91,7 @@ export function getColumns(permissions: ProductPermissions): ColumnDef<Product>[
     },
     {
       id: "actions",
-      header: "Actions",
+      header: "İşlemler",
       cell: ({ row }) => {
         return (
           <ProductActions 

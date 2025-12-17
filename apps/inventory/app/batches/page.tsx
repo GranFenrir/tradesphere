@@ -39,10 +39,10 @@ interface Stats {
 }
 
 const qualityConfig: Record<string, { label: string; color: string; icon: typeof CheckCircle }> = {
-  PENDING: { label: "Pending Review", color: "bg-yellow-500/20 text-yellow-400", icon: Clock },
-  APPROVED: { label: "Approved", color: "bg-green-500/20 text-green-400", icon: CheckCircle },
-  REJECTED: { label: "Rejected", color: "bg-red-500/20 text-red-400", icon: AlertTriangle },
-  QUARANTINE: { label: "Quarantine", color: "bg-orange-500/20 text-orange-400", icon: AlertTriangle },
+  PENDING: { label: "İnceleme Bekliyor", color: "bg-yellow-500/20 text-yellow-400", icon: Clock },
+  APPROVED: { label: "Onaylandı", color: "bg-green-500/20 text-green-400", icon: CheckCircle },
+  REJECTED: { label: "Reddedildi", color: "bg-red-500/20 text-red-400", icon: AlertTriangle },
+  QUARANTINE: { label: "Karantina", color: "bg-orange-500/20 text-orange-400", icon: AlertTriangle },
 };
 
 export default function BatchesPage() {
@@ -88,7 +88,7 @@ export default function BatchesPage() {
 
   const formatDate = (date: string | null) => {
     if (!date) return "—";
-    return new Date(date).toLocaleDateString("en-US", {
+    return new Date(date).toLocaleDateString("tr-TR", {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -121,22 +121,22 @@ export default function BatchesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Batch & Lot Tracking</h1>
+          <h1 className="text-3xl font-bold text-foreground">Parti & Lot Takibi</h1>
           <p className="text-muted-foreground mt-1">
-            Track batches, lots, and expiry dates for inventory items
+            Envanter kalemleri için parti, lot ve son kullanma tarihlerini takip edin
           </p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" asChild>
             <Link href="/batches/serial-numbers">
               <QrCode className="w-4 h-4 mr-2" />
-              Serial Numbers
+              Seri Numaraları
             </Link>
           </Button>
           <Button asChild>
             <Link href="/batches/new">
               <Plus className="w-4 h-4 mr-2" />
-              New Batch
+              Yeni Parti
             </Link>
           </Button>
         </div>

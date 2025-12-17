@@ -30,95 +30,95 @@ interface ReportConfig {
 const reports: ReportConfig[] = [
   {
     id: "inventory-valuation",
-    name: "Inventory Valuation",
-    description: "Current value of all inventory by product, including cost and retail value",
+    name: "Envanter Değerlemesi",
+    description: "Maliyet ve perakende değeri dahil, ürüne göre tüm envanterin mevcut değeri",
     icon: Package,
-    category: "Inventory",
+    category: "Envanter",
     endpoint: "/api/reports/inventory-valuation",
   },
   {
     id: "stock-levels",
-    name: "Stock Levels",
-    description: "Current stock levels with reorder point and max stock comparisons",
+    name: "Stok Seviyeleri",
+    description: "Yeniden sipariş noktası ve maksimum stok karşılaştırmalarıyla mevcut stok seviyeleri",
     icon: BarChart3,
-    category: "Inventory",
+    category: "Envanter",
     endpoint: "/api/reports/stock-levels",
   },
   {
     id: "low-stock",
-    name: "Low Stock Alert",
-    description: "Products at or below reorder point requiring attention",
+    name: "Düşük Stok Uyarısı",
+    description: "Yeniden sipariş noktasında veya altında ilgi gerektiren ürünler",
     icon: TrendingUp,
-    category: "Inventory",
+    category: "Envanter",
     endpoint: "/api/reports/low-stock",
   },
   {
     id: "expiring-batches",
-    name: "Expiring Batches",
-    description: "Batches expiring within the next 30, 60, or 90 days",
+    name: "Süresi Dolan Partiler",
+    description: "Önümüzdeki 30, 60 veya 90 gün içinde süresi dolacak partiler",
     icon: Calendar,
-    category: "Inventory",
+    category: "Envanter",
     endpoint: "/api/reports/expiring-batches",
   },
   {
     id: "sales-summary",
-    name: "Sales Summary",
-    description: "Sales orders summary by status, customer, and time period",
+    name: "Satış Özeti",
+    description: "Durum, müşteri ve zaman dilimine göre satış siparişleri özeti",
     icon: DollarSign,
-    category: "Sales",
+    category: "Satış",
     endpoint: "/api/reports/sales-summary",
   },
   {
     id: "customer-analysis",
-    name: "Customer Analysis",
-    description: "Customer order history and total revenue by customer",
+    name: "Müşteri Analizi",
+    description: "Müşteri sipariş geçmişi ve müşteriye göre toplam gelir",
     icon: Users,
-    category: "Sales",
+    category: "Satış",
     endpoint: "/api/reports/customer-analysis",
   },
   {
     id: "purchase-summary",
-    name: "Purchase Summary",
-    description: "Purchase orders summary by status, supplier, and time period",
+    name: "Satın Alma Özeti",
+    description: "Durum, tedarikçi ve zaman dilimine göre satın alma siparişleri özeti",
     icon: Truck,
-    category: "Purchasing",
+    category: "Satın Alma",
     endpoint: "/api/reports/purchase-summary",
   },
   {
     id: "supplier-performance",
-    name: "Supplier Performance",
-    description: "Supplier delivery times, order volumes, and pricing analysis",
+    name: "Tedarikçi Performansı",
+    description: "Tedarikçi teslimat süreleri, sipariş hacimleri ve fiyatlama analizi",
     icon: Truck,
-    category: "Purchasing",
+    category: "Satın Alma",
     endpoint: "/api/reports/supplier-performance",
   },
   {
     id: "invoice-aging",
-    name: "Invoice Aging",
-    description: "Outstanding invoices by aging bucket (0-30, 31-60, 61-90, 90+ days)",
+    name: "Fatura Yaşlandırması",
+    description: "Yaşlandırma dönemine göre ödenmemiş faturalar (0-30, 31-60, 61-90, 90+ gün)",
     icon: FileText,
-    category: "Finance",
+    category: "Finans",
     endpoint: "/api/reports/invoice-aging",
   },
   {
     id: "revenue-report",
-    name: "Revenue Report",
-    description: "Revenue and profit analysis by product and time period",
+    name: "Gelir Raporu",
+    description: "Ürün ve zaman dilimine göre gelir ve kâr analizi",
     icon: DollarSign,
-    category: "Finance",
+    category: "Finans",
     endpoint: "/api/reports/revenue",
   },
 ];
 
-const categories = ["All", "Inventory", "Sales", "Purchasing", "Finance"];
+const categories = ["Tümü", "Envanter", "Satış", "Satın Alma", "Finans"];
 
 export default function ReportsPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("Tümü");
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
   const [generating, setGenerating] = useState<string | null>(null);
 
   const filteredReports =
-    selectedCategory === "All"
+    selectedCategory === "Tümü"
       ? reports
       : reports.filter((r) => r.category === selectedCategory);
 
@@ -133,7 +133,7 @@ export default function ReportsPage() {
 
       const response = await fetch(`${report.endpoint}?${params}`);
       
-      if (!response.ok) throw new Error("Failed to generate report");
+      if (!response.ok) throw new Error("Rapor oluşturulamadı");
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -145,8 +145,8 @@ export default function ReportsPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      console.error("Error generating report:", error);
-      alert("Failed to generate report. Please try again.");
+      console.error("Rapor oluşturma hatası:", error);
+      alert("Rapor oluşturulamadı. Lütfen tekrar deneyin.");
     } finally {
       setGenerating(null);
     }
@@ -156,9 +156,9 @@ export default function ReportsPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Reports</h1>
+        <h1 className="text-3xl font-bold text-foreground">Raporlar</h1>
         <p className="text-muted-foreground mt-1">
-          Generate and export business reports
+          İş raporları oluşturun ve dışa aktarın
         </p>
       </div>
 
@@ -167,7 +167,7 @@ export default function ReportsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Filter className="w-5 h-5" />
-            Report Filters
+            Rapor Filtreleri
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -175,7 +175,7 @@ export default function ReportsPage() {
             {/* Category Filter */}
             <div className="flex-1">
               <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                Category
+                Kategori
               </label>
               <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
@@ -198,7 +198,7 @@ export default function ReportsPage() {
             <div className="flex gap-4">
               <div>
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                  From Date
+                  Başlangıç Tarihi
                 </label>
                 <input
                   type="date"
@@ -209,7 +209,7 @@ export default function ReportsPage() {
               </div>
               <div>
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                  To Date
+                  Bitiş Tarihi
                 </label>
                 <input
                   type="date"
@@ -253,7 +253,7 @@ export default function ReportsPage() {
                     onClick={() => handleExport(report, "csv")}
                   >
                     <FileSpreadsheet className="w-4 h-4 mr-2" />
-                    {isGenerating ? "Generating..." : "CSV"}
+                    {isGenerating ? "Oluşturuluyor..." : "CSV"}
                   </Button>
                   <Button
                     variant="outline"
@@ -263,7 +263,7 @@ export default function ReportsPage() {
                     onClick={() => handleExport(report, "json")}
                   >
                     <Download className="w-4 h-4 mr-2" />
-                    {isGenerating ? "Generating..." : "JSON"}
+                    {isGenerating ? "Oluşturuluyor..." : "JSON"}
                   </Button>
                 </div>
               </CardContent>
@@ -275,34 +275,34 @@ export default function ReportsPage() {
       {/* Quick Stats */}
       <Card className="glass-card">
         <CardHeader>
-          <CardTitle>Report Tips</CardTitle>
+          <CardTitle>Rapor İpuçları</CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-start gap-2">
               <span className="text-primary">•</span>
               <span>
-                <strong>CSV format</strong> is best for importing into spreadsheet applications
-                like Excel or Google Sheets.
+                <strong>CSV formatı</strong> Excel veya Google Sheets gibi elektronik tablo
+                uygulamalarına aktarmak için en iyisidir.
               </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary">•</span>
               <span>
-                <strong>JSON format</strong> is ideal for integrating with other systems or
-                programmatic analysis.
+                <strong>JSON formatı</strong> diğer sistemlerle entegrasyon veya
+                programatik analiz için idealdir.
               </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary">•</span>
               <span>
-                Use <strong>date filters</strong> to narrow down reports to specific time periods.
+                Raporları belirli zaman dilimlerine daraltmak için <strong>tarih filtrelerini</strong> kullanın.
               </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary">•</span>
               <span>
-                Reports are generated in real-time with the latest data from your database.
+                Raporlar veritabanınızdaki en güncel verilerle anlık olarak oluşturulur.
               </span>
             </li>
           </ul>

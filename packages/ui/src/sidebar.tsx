@@ -43,51 +43,51 @@ interface NavItem {
 }
 
 const mainNavigation: NavItem[] = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
-    { name: "Inventory", href: "/inventory", icon: Package },
-    { name: "Analytics", href: "/analytics", icon: BarChart3 },
-    { name: "Settings", href: "/settings", icon: Settings },
+    { name: "Ana Sayfa", href: "/", icon: LayoutDashboard },
+    { name: "Envanter", href: "/inventory", icon: Package },
+    { name: "Analitik", href: "/analytics", icon: BarChart3 },
+    { name: "Ayarlar", href: "/settings", icon: Settings },
 ];
 
 // Sub-navigation for inventory module
 const inventorySubNav: NavItem[] = [
-    { name: "Products", href: "/inventory", icon: Package },
-    { name: "Warehouses", href: "/inventory/warehouses", icon: Building2 },
-    { name: "Locations", href: "/inventory/locations", icon: MapPin },
+    { name: "Ürünler", href: "/inventory", icon: Package },
+    { name: "Depolar", href: "/inventory/warehouses", icon: Building2 },
+    { name: "Konumlar", href: "/inventory/locations", icon: MapPin },
     { 
-        name: "Stock", 
+        name: "Stok", 
         href: "/inventory/stock", 
         icon: Boxes,
         children: [
-            { name: "Overview", href: "/inventory/stock", icon: Boxes },
-            { name: "Stock In", href: "/inventory/stock/in", icon: ArrowDownCircle },
-            { name: "Stock Out", href: "/inventory/stock/out", icon: ArrowUpCircle },
+            { name: "Genel Bakış", href: "/inventory/stock", icon: Boxes },
+            { name: "Stok Girişi", href: "/inventory/stock/in", icon: ArrowDownCircle },
+            { name: "Stok Çıkışı", href: "/inventory/stock/out", icon: ArrowUpCircle },
             { name: "Transfer", href: "/inventory/stock/transfer", icon: ArrowRightLeft },
-            { name: "History", href: "/inventory/stock/movements", icon: History },
+            { name: "Geçmiş", href: "/inventory/stock/movements", icon: History },
         ],
     },
-    { name: "Batches & Lots", href: "/inventory/batches", icon: QrCode },
-    { name: "Suppliers", href: "/inventory/suppliers", icon: Truck },
-    { name: "Purchase Orders", href: "/inventory/purchase-orders", icon: ClipboardList },
-    { name: "Sales Orders", href: "/inventory/sales-orders", icon: ShoppingCart },
-    { name: "Invoices", href: "/inventory/invoices", icon: FileText },
+    { name: "Parti & Lot", href: "/inventory/batches", icon: QrCode },
+    { name: "Tedarikçiler", href: "/inventory/suppliers", icon: Truck },
+    { name: "Satın Alma Siparişleri", href: "/inventory/purchase-orders", icon: ClipboardList },
+    { name: "Satış Siparişleri", href: "/inventory/sales-orders", icon: ShoppingCart },
+    { name: "Faturalar", href: "/inventory/invoices", icon: FileText },
     { 
         name: "CRM", 
         href: "/inventory/crm/leads", 
         icon: Users,
         children: [
-            { name: "Leads", href: "/inventory/crm/leads", icon: UserPlus },
-            { name: "Opportunities", href: "/inventory/crm/opportunities", icon: Target },
+            { name: "Potansiyel Müşteriler", href: "/inventory/crm/leads", icon: UserPlus },
+            { name: "Fırsatlar", href: "/inventory/crm/opportunities", icon: Target },
         ],
     },
 ];
 
 // Sub-navigation for analytics module
 const analyticsSubNav: NavItem[] = [
-    { name: "Overview", href: "/analytics", icon: PieChart },
-    { name: "Stock Health", href: "/analytics/stock-health", icon: TrendingUp },
-    { name: "Financials", href: "/analytics/financials", icon: DollarSign },
-    { name: "Reports", href: "/analytics/reports", icon: FileText },
+    { name: "Genel Bakış", href: "/analytics", icon: PieChart },
+    { name: "Stok Sağlığı", href: "/analytics/stock-health", icon: TrendingUp },
+    { name: "Finansal", href: "/analytics/financials", icon: DollarSign },
+    { name: "Raporlar", href: "/analytics/reports", icon: FileText },
 ];
 
 // User interface for sidebar
@@ -110,7 +110,7 @@ export function Sidebar({ basePath = "", user, onLogout }: SidebarProps) {
     const effectivePath = (basePath + (pathname === "/" ? "" : pathname)) || "/";
     
     const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(() => ({
-        Stock: effectivePath.includes("/stock"),
+        Stok: effectivePath.includes("/stock"),
         CRM: effectivePath.includes("/crm"),
     }));
 
@@ -127,7 +127,7 @@ export function Sidebar({ basePath = "", user, onLogout }: SidebarProps) {
     
     // Get sub-navigation based on current module
     const subNavigation = isInInventory ? inventorySubNav : isInAnalytics ? analyticsSubNav : null;
-    const moduleLabel = isInInventory ? "Inventory Module" : isInAnalytics ? "Analytics Module" : null;
+    const moduleLabel = isInInventory ? "Envanter Modülü" : isInAnalytics ? "Analitik Modülü" : null;
 
     const isActive = (href: string) => {
         if (href === "/" || href === "/inventory" || href === "/analytics") {
@@ -282,17 +282,17 @@ export function Sidebar({ basePath = "", user, onLogout }: SidebarProps) {
                         </div>
                         <div className="flex-1 overflow-hidden">
                             <p className="text-sm font-medium text-foreground truncate">
-                                {user.name || "User"}
+                                {user.name || "Kullanıcı"}
                             </p>
                             <p className="text-xs text-muted-foreground truncate">
-                                {user.role ? user.role.charAt(0) + user.role.slice(1).toLowerCase() : "User"}
+                                {user.role ? user.role.charAt(0) + user.role.slice(1).toLowerCase() : "Kullanıcı"}
                             </p>
                         </div>
                         {onLogout && (
                             <button
                                 onClick={onLogout}
                                 className="p-2 text-muted-foreground hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                                title="Sign out"
+                                title="Çıkış yap"
                             >
                                 <LogOut className="w-4 h-4" />
                             </button>

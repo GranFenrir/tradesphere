@@ -84,7 +84,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  Sonuç bulunamadı.
                 </TableCell>
               </TableRow>
             )}
@@ -99,7 +99,7 @@ export function DataTable<TData, TValue>({
           disabled={!table.getCanPreviousPage()}
           className="border-border text-foreground hover:bg-muted/50"
         >
-          Previous
+          Önceki
         </Button>
         <Button
           variant="outline"
@@ -108,7 +108,7 @@ export function DataTable<TData, TValue>({
           disabled={!table.getCanNextPage()}
           className="border-border text-foreground hover:bg-muted/50"
         >
-          Next
+          Sonraki
         </Button>
       </div>
     </div>

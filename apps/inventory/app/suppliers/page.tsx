@@ -38,15 +38,15 @@ export default async function SuppliersPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Suppliers</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Tedarikçiler</h1>
           <p className="text-muted-foreground mt-2">
-            Manage your supplier relationships and product sourcing.
+            Tedarikçi ilişkilerinizi ve ürün kaynakçılığınızı yönetin.
           </p>
         </div>
         <Link href="/suppliers/new">
           <Button className="shadow-[0_0_15px_rgba(168,85,247,0.4)]">
             <Plus className="w-4 h-4 mr-2" />
-            Add Supplier
+            Tedarikçi Ekle
           </Button>
         </Link>
       </div>
@@ -56,14 +56,14 @@ export default async function SuppliersPage() {
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Suppliers
+              Toplam Tedarikçi
             </CardTitle>
             <Building2 className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">{totalSuppliers}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              {activeSuppliers} active
+              {activeSuppliers} aktif
             </p>
           </CardContent>
         </Card>
@@ -71,14 +71,14 @@ export default async function SuppliersPage() {
         <Card className="glass-card border-blue-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Products Sourced
+              Tedarik Edilen Ürünler
             </CardTitle>
             <Package className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">{totalProducts}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Across all suppliers
+              Tüm tedarikçilerde
             </p>
           </CardContent>
         </Card>
@@ -86,7 +86,7 @@ export default async function SuppliersPage() {
         <Card className="glass-card border-green-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Active Orders
+              Aktif Siparişler
             </CardTitle>
             <ExternalLink className="h-4 w-4 text-green-400" />
           </CardHeader>
@@ -95,7 +95,7 @@ export default async function SuppliersPage() {
               {supplierStats.reduce((sum, s) => sum + s.activeOrders, 0)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Pending delivery
+              Teslimat bekliyor
             </p>
           </CardContent>
         </Card>
@@ -118,7 +118,7 @@ export default async function SuppliersPage() {
                         : "bg-red-500/20 text-red-400 border border-red-500/30"
                     }`}
                   >
-                    {supplier.isActive ? "Active" : "Inactive"}
+                    {supplier.isActive ? "Aktif" : "Pasif"}
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground font-mono">
@@ -141,7 +141,7 @@ export default async function SuppliersPage() {
                   )}
                   {supplier.leadTimeDays && (
                     <div className="text-muted-foreground">
-                      Lead time: <span className="text-foreground">{supplier.leadTimeDays} days</span>
+                      Teslim süresi: <span className="text-foreground">{supplier.leadTimeDays} gün</span>
                     </div>
                   )}
                 </div>

@@ -64,15 +64,15 @@ export default async function LocationsPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Locations</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Konumlar</h1>
           <p className="text-muted-foreground mt-2">
-            Manage storage locations across all warehouses.
+            Tüm depolardaki depolama konumlarını yönetin.
           </p>
         </div>
         <Link href="/locations/new">
           <Button className="shadow-[0_0_15px_rgba(168,85,247,0.4)]">
             <Plus className="w-4 h-4 mr-2" />
-            Add Location
+            Konum Ekle
           </Button>
         </Link>
       </div>
@@ -82,6 +82,12 @@ export default async function LocationsPage() {
         {(Object.entries(typeCounts) as [keyof typeof typeColors, number][]).map(([type, count]) => {
           const Icon = typeIcons[type];
           const colorClass = typeColors[type];
+          const typeLabels: Record<string, string> = {
+            ZONE: "Bölge",
+            RACK: "Raf",
+            SHELF: "Raf Katı",
+            BIN: "Kutu",
+          };
           return (
             <Card key={type} className="glass-card border-border">
               <CardContent className="pt-6">
@@ -91,7 +97,7 @@ export default async function LocationsPage() {
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-foreground">{count}</p>
-                    <p className="text-xs text-muted-foreground">{type}s</p>
+                    <p className="text-xs text-muted-foreground">{typeLabels[type]}</p>
                   </div>
                 </div>
               </CardContent>
@@ -114,7 +120,7 @@ export default async function LocationsPage() {
               </div>
               <Link href={`/warehouses/${warehouse.id}`}>
                 <Button variant="ghost" size="sm">
-                  View Warehouse
+                  Depoyu Görüntüle
                 </Button>
               </Link>
             </div>
@@ -146,17 +152,17 @@ export default async function LocationsPage() {
                       </div>
                       {location.parent && (
                         <p className="text-xs text-muted-foreground mt-1">
-                          Parent: {location.parent.name}
+                          Üst Konum: {location.parent.name}
                         </p>
                       )}
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-medium text-foreground">
-                        {totalStock > 0 ? `${totalStock} units` : "Empty"}
+                        {totalStock > 0 ? `${totalStock} adet` : "Boş"}
                       </p>
                       {location._count.children > 0 && (
                         <p className="text-xs text-muted-foreground">
-                          {location._count.children} sub-locations
+                          {location._count.children} alt konum
                         </p>
                       )}
                     </div>
@@ -173,13 +179,13 @@ export default async function LocationsPage() {
           <CardContent className="flex flex-col items-center justify-center py-12">
             <MapPin className="w-12 h-12 text-muted-foreground mb-4" />
             <p className="text-muted-foreground text-center">
-              No locations yet. Create warehouses first, then add locations.
+              Henüz konum yok. Önce depo oluşturun, sonra konum ekleyin.
             </p>
             <div className="flex gap-4 mt-4">
               <Link href="/warehouses/new">
                 <Button variant="outline">
                   <Building2 className="w-4 h-4 mr-2" />
-                  Add Warehouse
+                  Depo Ekle
                 </Button>
               </Link>
             </div>

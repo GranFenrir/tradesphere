@@ -38,15 +38,15 @@ export default async function WarehousesPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground neon-text">Warehouses</h1>
+          <h1 className="text-3xl font-bold text-foreground neon-text">Depolar</h1>
           <p className="text-muted-foreground mt-2">
-            Manage your warehouse facilities and storage locations.
+            Depo tesislerinizi ve depolama konumlarınızı yönetin.
           </p>
         </div>
         <Link href="/warehouses/new">
           <Button className="shadow-[0_0_15px_rgba(168,85,247,0.4)]">
             <Plus className="w-4 h-4 mr-2" />
-            Add Warehouse
+            Depo Ekle
           </Button>
         </Link>
       </div>
@@ -56,14 +56,14 @@ export default async function WarehousesPage() {
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Warehouses
+              Toplam Depo
             </CardTitle>
             <Building2 className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">{warehouses.length}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              {warehouses.filter((w) => w.isActive).length} active
+              {warehouses.filter((w) => w.isActive).length} aktif
             </p>
           </CardContent>
         </Card>
@@ -71,7 +71,7 @@ export default async function WarehousesPage() {
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Locations
+              Toplam Konum
             </CardTitle>
             <MapPin className="h-4 w-4 text-blue-400" />
           </CardHeader>
@@ -80,7 +80,7 @@ export default async function WarehousesPage() {
               {warehouseStats.reduce((sum, w) => sum + w.locationCount, 0)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Across all warehouses
+              Tüm depolarda
             </p>
           </CardContent>
         </Card>
@@ -88,7 +88,7 @@ export default async function WarehousesPage() {
         <Card className="glass-card border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Stock Units
+              Toplam Stok Birimi
             </CardTitle>
             <Package className="h-4 w-4 text-green-400" />
           </CardHeader>
@@ -97,7 +97,7 @@ export default async function WarehousesPage() {
               {warehouseStats.reduce((sum, w) => sum + w.totalStock, 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Items in storage
+              Depodaki kalemler
             </p>
           </CardContent>
         </Card>
@@ -120,7 +120,7 @@ export default async function WarehousesPage() {
                         : "bg-red-500/20 text-red-400 border border-red-500/30"
                     }`}
                   >
-                    {warehouse.isActive ? "Active" : "Inactive"}
+                    {warehouse.isActive ? "Aktif" : "Pasif"}
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground font-mono">
@@ -137,17 +137,17 @@ export default async function WarehousesPage() {
                 <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
                   <div className="text-center">
                     <p className="text-lg font-bold text-foreground">{warehouse.locationCount}</p>
-                    <p className="text-xs text-muted-foreground">Locations</p>
+                    <p className="text-xs text-muted-foreground">Konum</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-foreground">{warehouse.uniqueProducts}</p>
-                    <p className="text-xs text-muted-foreground">Products</p>
+                    <p className="text-xs text-muted-foreground">Ürün</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-foreground">
                       {warehouse.totalStock.toLocaleString()}
                     </p>
-                    <p className="text-xs text-muted-foreground">Units</p>
+                    <p className="text-xs text-muted-foreground">Birim</p>
                   </div>
                 </div>
               </CardContent>
@@ -160,12 +160,12 @@ export default async function WarehousesPage() {
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Warehouse className="w-12 h-12 text-muted-foreground mb-4" />
               <p className="text-muted-foreground text-center">
-                No warehouses yet. Create your first warehouse to get started.
+                Henüz depo yok. Başlamak için ilk deponuzu oluşturun.
               </p>
               <Link href="/warehouses/new" className="mt-4">
                 <Button variant="outline">
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Warehouse
+                  Depo Ekle
                 </Button>
               </Link>
             </CardContent>
